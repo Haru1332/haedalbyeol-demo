@@ -350,7 +350,7 @@ function waitSky(t0) {
   const sky = $('#sky'), sign = st.chart.sunSign || st.chart.sunSigns[0], c = ZODIAC[sign], H = $('#frame').offsetHeight || 640, pos = skyLayout(c, H);
   let g = '', seed = sign.length * 977 + 13; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   for (let n = 0; n < 70; n++) g += `<circle cx="${(rnd() * SKY.W).toFixed(1)}" cy="${(rnd() * H).toFixed(1)}" r="${(rnd() * .7 + .3).toFixed(2)}" class="sk-dust" opacity="${(rnd() * .3 + .1).toFixed(2)}"/>`;
-  c.edges.forEach(([a, b, dot], k) => { const [x1, y1] = pos[a], [x2, y2] = pos[b]; g += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sk-edge${dot ? ' dot' : ''} wl" data-a="${a}" data-b="${b}" style="--len:${Math.hypot(x2 - x1, y2 - y1).toFixed(1)}"/>`; });
+  c.edges.forEach(([a, b, dot], k) => { const [x1, y1] = pos[a], [x2, y2] = pos[b]; g += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sk-edge${dot ? ' dot fill' : ''} wl" data-a="${a}" data-b="${b}" style="--len:${Math.hypot(x2 - x1, y2 - y1).toFixed(1)}"/>`; });
   c.stars.forEach((s, id) => { const [x, y] = pos[id]; g += `<circle cx="${x}" cy="${y}" r="${Math.max(1.4, 3.6 - s[2] * .45).toFixed(2)}" class="sk-small ws" data-id="${id}"/>`; });
   sky.innerHTML = `<svg viewBox="0 0 ${SKY.W} ${H}" class="sk-svg">${g}</svg><div class="sk-hud"><b>${esc(sign)}</b><span></span></div>`;
   skyBg(sky); sky.hidden = false; $('#frame').classList.add('daily-talk');
@@ -840,7 +840,7 @@ $('#gate-go').addEventListener('click', e => { e.currentTarget.disabled = true; 
 //    차례대로 반짝인다. 누르면 그 별의 풀이(웹툰)가 열리고, 다 보고 돌아오면 선이 이어진다. 다 이으면 별자리 완성 → 보고서.
 //    별 위치는 공개 별 자료(app/zodiac.js, d3-celestial BSD-3)의 실제 좌표.
 const skyDone = new Set();
-const SKY = {W: 360, top: 70, bot: 250, pad: 40};   // bot 250: 아래쪽은 말 상자와 유화 스티커 자리(2026-10-23, 전 150)
+const SKY = {W: 360, top: 112, bot: 250, pad: 40};   // top 112: 별이 위쪽 'n번째 별 준비됐어요' 글자(62~80px)와 겹치지 않게(2026-10-25 haru, 게자리 맨 위 별), 전 70   // bot 250: 아래쪽은 말 상자와 유화 스티커 자리(2026-10-23, 전 150)
 function skyLayout(c, H) {
   const ras = c.stars.map(s => s[0]), decs = c.stars.map(s => s[1]);
   const ra0 = ras[0], unwrap = r => { let d = r - ra0; if (d > 180) d -= 360; if (d < -180) d += 360; return d; };   // 0°/360° 넘는 별자리(물고기 등)
@@ -924,7 +924,7 @@ function openSky(justDone = null) {
   for (const [a, b, dot] of c.edges) {
     const [x1, y1] = pos[a], [x2, y2] = pos[b], len = Math.hypot(x2 - x1, y2 - y1).toFixed(1), o = on(a) && on(b);
     const fresh = o && justDone != null && [a, b].some(id => qOf(id) === justDone);
-    g += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sk-edge${dot ? ' dot' : ''}${o ? ' on' : ''}${fresh ? ' fresh' : ''}" style="--len:${len}"/>`;
+    g += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="sk-edge${dot ? ' dot fill' : ''}${o ? ' on' : ''}${fresh ? ' fresh' : ''}" style="--len:${len}"/>`;
   }
   c.stars.forEach((s, id) => {
     const [x, y] = pos[id], k = qOf(id);
