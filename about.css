@@ -1,0 +1,105 @@
+/* 입구 장막(curtain.js)과 세 자매 프로필(#about-view). 색·글꼴은 style.css 그대로 */
+
+/* 입구 장막: 밤하늘 위에 세 자매 얼굴과 [골목으로 들어가기]. 걷힐 때는 흐려지며 살짝 커진다 */
+html.curtained, html.curtained body { overflow: hidden; }
+.curtain {
+  position: fixed; inset: 0; z-index: 40;   /* 머리 줄(20) 위, 카톡 안내 띠(50) 아래 */
+  display: grid; place-items: center; padding: 24px 16px; cursor: pointer; text-align: center;
+  background:
+    radial-gradient(1.2px 1.2px at 12% 18%, #fff9 50%, transparent 51%), radial-gradient(1px 1px at 27% 8%, #fff7 50%, transparent 51%),
+    radial-gradient(1.4px 1.4px at 41% 22%, #fff8 50%, transparent 51%), radial-gradient(1px 1px at 63% 12%, #fff6 50%, transparent 51%),
+    radial-gradient(1.2px 1.2px at 78% 26%, #fff8 50%, transparent 51%), radial-gradient(1px 1px at 90% 9%, #fff7 50%, transparent 51%),
+    radial-gradient(1px 1px at 8% 70%, #fff5 50%, transparent 51%), radial-gradient(1.2px 1.2px at 92% 64%, #fff6 50%, transparent 51%),
+    radial-gradient(1px 1px at 22% 88%, #fff4 50%, transparent 51%), radial-gradient(1.2px 1.2px at 74% 86%, #fff5 50%, transparent 51%),
+    radial-gradient(70% 45% at 50% 0%, #241c2a 0%, transparent 70%),
+    radial-gradient(60% 30% at 50% 100%, rgba(240,180,106,.14) 0%, transparent 70%),
+    linear-gradient(180deg, #17121a 0%, var(--night) 60%);
+  transition: opacity .8s ease, visibility 0s .8s;
+}
+.curtain[hidden] { display: none; }
+html:not(.curtained) .curtain:not(.gone) { display: none; }   /* 가게에서 돌아올 때(?from=)는 첫 화면부터 안 보이게 */
+.curtain .c-in { display: grid; justify-items: center; gap: 14px; transition: scale .8s ease; }
+.curtain.gone { opacity: 0; visibility: hidden; pointer-events: none; }
+.curtain.gone .c-in { scale: 1.06; }
+/* 세 얼굴이 자리를 돌아가며 바꾸고 가운데 온 얼굴이 커진다(2026-10-25 haru 「돌아가면서 가운데가 커지게」, curtain.js가 data-slot을 돌림).
+   이동은 translate·scale 개별 속성으로만(볼트 노트 'rotate로 돌려 둔 요소를 transform으로 옮기면 엉뚱한 방향으로 날아간다') */
+.c-faces { position: relative; width: 300px; height: 116px; margin-bottom: 6px; isolation: isolate; }   /* 가운데를 크게(2026-10-25 haru 「제일 큰 사진이 너무 작아서」) */
+.c-faces span { position: absolute; left: 50%; bottom: 0; display: block; width: 112px; margin-left: -56px; transform-origin: 50% 100%; transition: translate .8s cubic-bezier(.65,0,.35,1), scale .8s cubic-bezier(.65,0,.35,1), filter .8s ease; }
+.c-faces span[data-slot="0"] { translate: -100px 0; scale: .62; filter: brightness(.8); }
+.c-faces span[data-slot="1"] { translate: 0 0; scale: 1; z-index: 1; }
+.c-faces span[data-slot="2"] { translate: 100px 0; scale: .62; filter: brightness(.8); }
+/* 왼쪽 끝에서 오른쪽 끝으로 넘어가는 얼굴은 두 얼굴 뒤로 지나간다(2026-10-25 haru 「제일 뒤에서 움직여야」). 지나가며 작아지는 건 해 봤다가 뺌(「아까가 더 나은것 같아」) */
+.c-faces span.back { z-index: -1; }
+.c-faces b { transition: scale .8s cubic-bezier(.65,0,.35,1); }
+.c-faces span:not([data-slot="1"]) b { scale: 1.45; }   /* 옆 얼굴은 .62배라 해·별 글씨가 너무 작아짐 → 글씨만 되돌려 키움 */
+.c-faces img { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold); box-shadow: 0 0 0 3px rgba(20,16,13,.6), 0 0 0 4px rgba(217,168,95,.35); }
+.c-faces b { position: absolute; left: 50%; bottom: -10px; translate: -50% 0; font-family: var(--serif); font-weight: 400; font-size: 12px; color: var(--night); background: var(--gold); border-radius: 99px; padding: 0 7px; line-height: 1.6; }
+.c-mark { margin: 10px 0 0; font-family: var(--serif); font-weight: 700; font-size: clamp(34px, 9vw, 52px); letter-spacing: .12em; line-height: 1.2; }
+.c-mark .dot { color: var(--gold); }
+.c-line { margin: 0 0 14px; color: var(--mist); font-size: 15px; }
+.curtain .cta { font: inherit; font-family: var(--serif); font-size: 17px; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .curtain, .curtain .c-in, .c-faces span { transition: none; } }
+
+/* 가게에서 넘어올 때: 가게가 검게 닫고 오니 검은 막에서 시작해 걷힌다(눌림은 막지 않음). 뒤로 가기 복원 때는 다시 안 함 */
+html.arrive body::after { content: ""; position: fixed; inset: 0; z-index: 60; background: #000; pointer-events: none; animation: hdb-arrive 1.4s ease .2s forwards; }
+@keyframes hdb-arrive { to { opacity: 0; visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { html.arrive body::after { animation-duration: .4s; animation-delay: 0s; } }
+
+/* 가게로 떠날 때(main.js leaveTo): 검은 막이 0.8초에 짙어진 뒤 넘어간다 */
+.leave-black { position: fixed; inset: 0; z-index: 60; background: #000; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .75s ease, visibility 0s .75s; }
+.leave-black.on { opacity: 1; visibility: visible; pointer-events: auto; transition: opacity .75s ease; }
+@media (prefers-reduced-motion: reduce) { .leave-black, .leave-black.on { transition-duration: .2s; } }
+
+/* 가게 안내 칸 아래 링크 줄(풀이 예시 · ○○에 대하여) */
+.panel-links { margin: 20px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; }
+.panel-links a { color: var(--candle); }
+.panel .panel-links .to-sample { margin: 0; }
+
+/* 프로필 화면 */
+.a-head { padding-block: 30px 6px; }
+.a-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.a-tabs a { display: inline-flex; align-items: center; gap: 8px; padding: 4px 14px 4px 4px; border: 1px solid var(--line); border-radius: 99px; text-decoration: none; color: var(--mist); font-size: 14px; }
+.a-tabs a img { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.a-tabs a[aria-current="page"] { color: var(--night); background: var(--gold); border-color: var(--gold); }
+@media (hover: hover) { .a-tabs a:hover { border-color: var(--gold); color: var(--parch); } .a-tabs a[aria-current="page"]:hover { color: var(--night); } }
+.a-head h1 { font-family: var(--serif); font-size: clamp(32px, 6vw, 46px); line-height: 1.2; margin: 0; display: flex; align-items: baseline; gap: 12px; }
+.a-head h1 small { font-family: var(--sans); font-size: 15px; font-weight: 400; color: var(--mist); }
+.a-concept { margin: 12px 0 0; font-family: var(--serif); font-size: clamp(17px, 2.6vw, 20px); color: var(--parch); max-width: 32em; text-wrap: pretty; }
+
+.a-top { display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px; align-items: start; padding-block: 24px 48px; }
+.a-scene { margin: 0; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 3 / 2; }
+.a-scene img { width: 100%; height: 100%; object-fit: cover; }
+.a-facts { margin: 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.a-facts div { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+.a-facts dt { color: var(--gold); font-size: 13px; padding-top: 2px; }
+.a-facts dd { margin: 0; font-size: 15px; }
+@media (max-width: 760px) { .a-top { grid-template-columns: 1fr; gap: 22px; } }
+
+.a-body { display: grid; gap: 40px; }
+.a-body > * { max-width: 760px; }
+.a-text p, p.a-text { margin: 0 0 12px; color: var(--parch); }
+.a-text p:last-child { margin-bottom: 0; }
+.a-boxes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.a-box, .a-pet { padding: 16px 18px; border: 1px solid var(--line); border-radius: 6px; background: var(--night-2); }
+.a-box h3, .a-pet h3 { margin: 0 0 8px; font-size: 13px; font-weight: 400; letter-spacing: .1em; color: var(--gold); }
+.a-box ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: 15px; }
+.a-box li::marker { color: var(--gold); }
+.a-pet p { margin: 0; font-size: 15px; }
+.a-quote { display: grid; gap: 10px; }
+.a-quote .said { margin: 0; font-family: var(--serif); font-size: 18px; display: flex; gap: 12px; align-items: baseline; }
+.a-quote .said span { flex: none; font-family: var(--sans); font-size: 12px; color: var(--gold); min-width: 2.6em; }
+.a-quote .said.me { color: var(--candle); }
+.a-boxes[hidden], .a-pet[hidden], .a-quote[hidden] { display: none; }
+
+.a-table-wrap { overflow-x: auto; margin-top: 18px; }
+.a-table { border-collapse: collapse; min-width: 100%; font-size: 15px; }
+.a-table th, .a-table td { padding: 10px 14px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+.a-table thead th { font-family: var(--serif); font-weight: 400; font-size: 17px; }
+.a-table tbody th { color: var(--gold); font-weight: 400; font-size: 13px; }
+.a-table td { color: var(--mist); }
+.a-table .me { color: var(--parch); background: rgba(217,168,95,.08); }
+.a-table thead .me { color: var(--candle); }
+@media (max-width: 520px) { .a-table th, .a-table td { padding: 9px 8px; white-space: normal; } .a-table { font-size: 14px; } }
+
+.a-samples { display: grid; gap: 10px; margin-top: 16px; }
+.a-samples a { color: var(--candle); font-family: var(--serif); font-size: 17px; }

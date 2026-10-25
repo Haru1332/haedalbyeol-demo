@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko" data-ui="b">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>유화 별자리 · 태어난 하늘로 보는 점성술 풀이</title>
+<meta name="description" content="태어난 날·시간·곳으로 출생 차트(네이탈 차트)를 계산해, 막내 점성가 유화가 타고난 성향과 연애·일·돈·사람·앞으로의 흐름을 별 하나씩 풀어 드려요. 서양 점성술 별자리 풀이.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
+<link rel="preload" href="assets/fonts/Griun_Myoeunddobak-Rg.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>// 포트폴리오 체험판: 메인이 '/'가 아니라 체험판 맨 위(이 가게 폴더의 위)라서, 거기서 왔을 때도 원본처럼 밝아지게
+(() => { try { if ((performance.getEntriesByType('navigation')[0] || {}).type !== 'navigate') return; const r = document.referrer ? new URL(document.referrer) : null;
+  if (r && r.origin === location.origin && r.pathname === location.pathname.replace(/[^/]+\/$/, '')) document.documentElement.classList.add('from-main'); } catch {} })();</script>
+<script>
+// 메인에서 들어왔을 때만 첫 화면이 검은 데서 밝아진다(2026-10-25 메인 세션이 전한 haru 「메인에서 각 가게로 들어갈떄도 갑자기 팍! 들어가거든」).
+// 메인 판단: 이 PC·폰 링크는 주소의 home=(app.js와 같은 검사), 출시 뒤 같은 도메인은 이전 페이지가 메인(/). 새로 고침·뒤로 가기는 그대로
+(() => { try {
+  const nav = performance.getEntriesByType('navigation')[0]; if (nav && nav.type !== 'navigate') return;
+  const h = new URLSearchParams(location.search).get('home'); let main = false;
+  if (h) { const u = new URL(h); main = (u.protocol === 'http:' && ['127.0.0.1:8796', 'localhost:8796'].includes(u.host)) || (u.protocol === 'https:' && u.hostname.endsWith('.trycloudflare.com')); }
+  if (!main && document.referrer) { const r = new URL(document.referrer); main = r.origin === location.origin && r.pathname === '/' && location.pathname !== '/'; }
+  if (main) document.documentElement.classList.add('from-main');
+} catch {} })();
+</script>
+</head>
+<body>
+<div class="viewport">
+  <div class="fit" id="fit">
+    <main class="frame" id="frame" aria-label="유화의 별 탑">
+      <div class="vn-layer on" aria-hidden="true"></div><div class="vn-layer" aria-hidden="true"></div>
+      <div class="top"><span class="brand">유화 별자리</span><span class="progress" id="progress" hidden></span></div>
+      <div class="stage" id="stage"></div>
+      <div class="intro" id="intro" hidden><button class="intro-skip" id="intro-skip" type="button">건너뛰기</button></div>
+      <div class="gate" id="gate"><h1>유화 별자리</h1><button type="button" id="gate-go">들어가기</button></div>
+      <div class="choices" id="choices" hidden></div>
+      <div class="talk" id="talk" role="button" tabindex="0" aria-label="다음 대사" hidden>
+        <span class="name" id="name">유화</span>
+        <p class="line" id="line"></p>
+        <span class="next" id="next" hidden>▼</span>
+        <span class="status" id="status" hidden></span>
+      </div>
+      <section class="sky" id="sky" hidden aria-label="별 잇기"></section>
+      <section class="webtoon" id="webtoon" hidden></section>
+      <button type="button" class="sound-btn" id="sound-btn" aria-label="소리 끄기" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z" fill="currentColor"/><path class="w1" d="M15.5 9a4 4 0 0 1 0 6"/><path class="w2" d="M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M15.5 9.5l5 5m0-5l-5 5"/></svg></button>
+    </main>
+  </div>
+</div>
+<script>window.DEMO_CASES = ['astro-hyehwa', 'astro-wolhwa']; window.DEMO_SHOP = 'astro';</script>
+<script src="../demo-api.js"></script>
+<script src="theme-dates.js"></script>
+<script src="reading-format.js"></script>
+<script src="lines-data.js"></script>
+<script src="lines.js"></script>
+<script src="zodiac.js"></script>
+<script src="daily-data.js"></script>
+<script src="app.js"></script>
+<script src="sfx-data.js"></script>
+<script src="motion.js"></script>
+<script src="../demo-ui.js"></script>
+<script src="demo-shop.js"></script>
+</body>
+</html>

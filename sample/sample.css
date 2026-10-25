@@ -1,0 +1,66 @@
+/* 풀이 예시 화면(메인 안 #sample-view). 색·글꼴은 메인 style.css를 그대로 쓴다 */
+.s-back { display: inline-block; margin-bottom: 18px; color: var(--mist); font-size: 14px; text-decoration: none; }
+.s-back:hover { color: var(--parch); }
+.s-head { padding-block: 36px 8px; }
+.s-head h1 { font-family: var(--serif); font-size: clamp(26px, 5vw, 38px); line-height: 1.3; margin: 0; text-wrap: balance; }
+.s-head .story { color: var(--parch); margin: 12px 0 0; font-size: 16px; }
+.s-head .honest { color: var(--mist); font-size: 13px; margin: 14px 0 0; padding: 10px 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--night-2); }
+.s-head .honest b { color: var(--candle); font-weight: 400; }
+
+.who { margin: 22px 0 8px; padding: 18px; border: 1px solid var(--line); border-radius: 6px; display: grid; gap: 6px; }
+.who .who-head { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+.who .name { font-family: var(--serif); font-size: 20px; }
+.who .name small { font-family: var(--sans); font-size: 13px; color: var(--mist); margin-left: 8px; }
+.who .facts { color: var(--mist); font-size: 14px; }
+.who blockquote { margin: 8px 0 0; padding-left: 12px; border-left: 2px solid var(--gold); color: var(--parch); font-size: 15px; }
+
+/* 흐름 캡처(2026-10-24 haru 「좌우로 나열은 좀 아닌 것 같은데」): 폰 틀 하나에 한 장씩, 저절로 넘김 + 번호로 바로 가기 */
+.phone-show { display: grid; justify-items: center; gap: 14px; padding: 18px 16px 6px; }
+.phone-show .screen { position: relative; width: min(64vw, 270px, calc((100svh - 230px) * 390 / 844)); aspect-ratio: 390 / 844; border-radius: 26px; padding: 8px; background: #0c0a08; border: 1px solid var(--gold); box-shadow: 0 0 0 4px rgba(20,16,13,.7), 0 18px 40px rgba(0,0,0,.45); touch-action: pan-y; }
+.phone-show .screen img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: cover; border-radius: 18px; opacity: 0; transition: opacity .5s ease; }
+.phone-show .screen img.on { opacity: 1; }
+.phone-show .cap { min-height: 2.8em; max-width: 22em; text-align: center; color: var(--parch); font-size: 15px; margin: 0; text-wrap: balance; }
+.phone-show .cap b { color: var(--gold); font-weight: 400; margin-right: 6px; }
+.phone-show .steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.phone-show .steps button, .phone-show .nav button { font: inherit; color: var(--mist); background: none; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.phone-show .steps button { width: 34px; height: 34px; font-size: 13px; }
+.phone-show .steps button span { display: none; }
+.phone-show .steps button[aria-current="true"] { color: var(--night); background: var(--gold); border-color: var(--gold); }
+.phone-show .nav { display: flex; align-items: center; gap: 14px; color: var(--mist); font-size: 13px; }
+.phone-show .nav button { width: 40px; height: 40px; font-size: 18px; }
+/* PC·패드 가로: 폰 옆에 단계 목록(번호 + 설명) */
+@media (min-width: 760px) {
+  .phone-show { grid-template-columns: auto minmax(0, 340px); justify-content: center; align-items: center; column-gap: 48px; }
+  .phone-show .screen { grid-row: 1 / 4; width: min(270px, calc((100svh - 140px) * 390 / 844)); }
+  .phone-show .cap { display: none; }
+  .phone-show .steps { flex-direction: column; flex-wrap: nowrap; gap: 4px; justify-content: flex-start; }
+  .phone-show .steps button { width: auto; height: auto; display: flex; gap: 12px; align-items: baseline; text-align: left; padding: 9px 16px; border-radius: 8px; border-color: transparent; font-size: 15px; }
+  .phone-show .steps button span { display: inline; }
+  .phone-show .steps button[aria-current="true"] { background: rgba(217,168,95,.14); color: var(--parch); border-color: var(--gold); }
+  .phone-show .steps button[aria-current="true"] b { color: var(--gold); }
+  .phone-show .steps b { font-weight: 400; min-width: 1.2em; }
+  .phone-show .nav { justify-self: start; padding-left: 16px; }
+}
+@media (hover: hover) { .phone-show .steps button:hover, .phone-show .nav button:hover { border-color: var(--gold); color: var(--parch); } }
+
+.parts { display: grid; gap: 10px; margin-top: 18px; max-width: 760px; }
+.parts details { border: 1px solid var(--line); border-radius: 6px; background: var(--night-2); }
+.parts summary { cursor: pointer; padding: 14px 18px; list-style: none; display: grid; gap: 2px; }
+.parts summary::-webkit-details-marker { display: none; }
+.parts summary .n { font-size: 12px; color: var(--gold); letter-spacing: .08em; }
+.parts summary .q { font-family: var(--serif); font-size: 17px; }
+.parts .in { padding: 0 18px 16px; }
+.parts .in p { margin: 0 0 12px; }
+.parts .cards { font-size: 13px; color: var(--candle); }
+.parts .head { font-family: var(--serif); font-size: 17px; }
+.parts .rt { margin: 22px 0 8px; font-size: 13px; font-weight: 400; letter-spacing: .1em; color: var(--gold); }
+.parts .in > .rt:first-child { margin-top: 4px; }
+.parts mark { background: rgba(240,180,106,.22); color: var(--parch); padding: 0 2px; border-radius: 2px; }
+.parts dl { margin: 0 0 10px; }
+.parts dt { font-size: 12px; color: var(--gold); }
+.parts dd { margin: 2px 0 0; }
+
+.end { text-align: center; }
+.end .note { color: var(--mist); font-size: 13px; max-width: 30em; margin: 0 auto 20px; }
+.end .more { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px; margin-top: 26px; font-size: 14px; }
+.end .more a { color: var(--mist); }

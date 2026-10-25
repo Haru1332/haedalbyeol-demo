@@ -1,0 +1,57 @@
+{
+ "start": {
+  "music": "salon",
+  "fadeOutMs": 1200,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "intro": {
+  "music": "intro",
+  "fadeOutMs": 0,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "introEnd": {
+  "music": "salon",
+  "fadeOutMs": 2200,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "concernDone": {
+  "music": "keep",
+  "fadeOutMs": 0,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "firstShuffle": {
+  "music": "topic",
+  "fadeOutMs": 0,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "webtoon": {
+  "music": "reading",
+  "fadeOutMs": 1200,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "report": {
+  "music": "report",
+  "fadeOutMs": 1200,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "cardsAnnounce": {
+  "music": "stop",
+  "fadeOutMs": 1000,
+  "delayMs": 0,
+  "fadeInMs": 0
+ },
+ "questionsIntro": {
+  "music": "duck",
+  "level": 0.25,
+  "fadeOutMs": 8000,
+  "delayMs": 0,
+  "fadeInMs": 0
+ }
+}

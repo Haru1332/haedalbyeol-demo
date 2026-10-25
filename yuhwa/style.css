@@ -1,0 +1,663 @@
+/* 말풍선 폰트: 그리운 묘은또박체(월화 타로와 같음). 라이선스: 파일 개작·수정·판매 금지 → 받은 파일 그대로 */
+@font-face{font-family:'Myoeunttobak';src:url('assets/fonts/Griun_Myoeunddobak-Rg.woff2') format('woff2');font-display:swap}
+/* 혜화 사주 — 360×640 고정 무대(공통 기준 4장). 월화가 밤이면 혜화는 낮: 금선·종이 질감은 같고 바탕을 햇살 쪽으로 */
+:root{
+  --gold:#d9a85f; --candle:#f0b46a; --parch:#f5ead6; --ink:#2a2038; --cream:#fffaf0;
+  --day:#fbf3e4; --ochre:#c98a3c; --apricot:#f3c99a; --ink-soft:#6b5b4e; --vermilion:#c4553f;
+  --serif:"Gowun Batang","Batang","AppleMyungjo",serif;
+  --sans:"Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:#fff;color:var(--ink);font-family:var(--sans);overflow:hidden;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+
+.viewport{position:fixed;inset:0;display:grid;place-items:center;background:#fff}
+.fit{position:relative}
+.frame{position:absolute;left:0;top:0;width:360px;height:var(--frame-h,640px);transform-origin:0 0;overflow:hidden;isolation:isolate;
+  background:var(--room, none) center 30%/cover no-repeat,radial-gradient(ellipse at 70% 8%,#fff6dc 0,#f8e6c4 38%,#efd2a4 70%,#e3bd86 100%);
+  box-shadow:0 10px 40px #0002,0 0 0 1px #0000000d}
+.sun{position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,#fffbe8 0,#fff1c2aa 35%,#ffe3a000 70%)}
+
+.top{position:absolute;left:0;right:0;top:0;height:36px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;z-index:6}
+.brand{font-family:var(--serif);font-weight:700;font-size:14px;color:#8a5a22}
+.progress{font:400 11px/1 var(--serif);color:#8a5a22}
+
+/* 첫 화면 */
+.gate{position:absolute;inset:0;z-index:30;display:grid;place-content:center;justify-items:center;gap:10px;
+  background:radial-gradient(ellipse at 50% 35%,#fff8e6 0,#f6dfb5 55%,#e7c18a 100%)}
+.gate h1{margin:0;font:700 34px/1 var(--serif);color:#7a4b1a;letter-spacing:.04em}
+.gate-sub{margin:0 0 18px;font:400 14px/1 var(--serif);color:#9a6a35}
+.gate button{min-width:150px;height:46px;border:1px solid var(--gold);border-radius:23px;background:var(--cream);color:#7a4b1a;font:700 16px/1 var(--serif);cursor:pointer;box-shadow:0 6px 18px #9a6a3533}
+
+/* 무대 가운데: 명식·질문 목록 같은 종이 카드 */
+.stage{position:absolute;left:14px;right:14px;bottom:150px;z-index:3}
+.paper{background:var(--cream);border:1px solid var(--gold);border-radius:12px;padding:14px;box-shadow:0 8px 24px #7a4b1a26;animation:rise .4s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.paper h3{margin:0 0 10px;font:700 14px/1.3 var(--serif);color:#8a5a22;text-align:center}
+.paper.birth{margin-bottom:97px}   /* 생일 확인: 맞아요 · 다시 할게요(위아래 두 줄, 월화처럼) 위에 날짜 종이 */
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.pillar small{display:block;font-size:11px;color:var(--ink-soft);margin-bottom:4px}
+.pillar .gz{display:grid;gap:2px;padding:8px 0;border-radius:8px;background:#fdf1dc;border:1px solid #ecd3a8}
+.pillar .gz b{font:700 24px/1.1 var(--serif);color:#5b3a1c}
+.pillar .gz i{font-style:normal;font-size:11px;color:var(--ink-soft)}
+.pillar.day .gz{background:#fbe2b8;border-color:var(--ochre)}
+.pillar.none .gz b{color:#c9b59a}
+.elements{display:flex;justify-content:center;gap:8px;margin-top:10px;font-size:12px;color:var(--ink-soft)}
+.elements span b{color:#5b3a1c}
+.qlist{margin:0;padding:0 0 0 20px;font:400 13.5px/1.75 var(--serif);color:var(--ink)}
+
+/* 선택지(대화창 바로 위) */
+.choices{position:absolute;left:14px;right:14px;bottom:160px;z-index:5;display:grid;align-content:end;gap:6px}
+.choices.two-col{grid-template-columns:1fr 1fr}
+.choices.three-col{grid-template-columns:1fr 1fr 1fr}
+.choice{min-height:38px;padding:6px 12px;border:1px solid #c98a3c99;border-radius:10px;background:#fffaf0f2;color:var(--ink);font-size:14px;line-height:1.3;text-align:center;cursor:pointer;box-shadow:0 3px 10px #7a4b1a1f}
+@media (hover:hover) and (pointer:fine){.choice:hover{border-color:var(--ochre);background:#fff3df}}   /* 폰에서는 누른 자리의 :hover가 다음 화면 같은 자리 버튼(마지막 줄)에 남아 하얗게 칠해지고 글자가 안 보였다(2026-10-24 haru 폰) */
+.choice.go{background:linear-gradient(135deg,var(--candle),#e9a46a);color:#3a2210;font-weight:700;border:0}
+.choice:disabled{opacity:.45;cursor:not-allowed}
+.field{display:grid;gap:6px;background:#fffaf0f2;border:1px solid #c98a3c99;border-radius:10px;padding:10px}
+.field .row{display:flex;gap:6px}
+.field select,.field input,.field textarea{flex:1;min-width:0;height:38px;border:1px solid #d9b98a;border-radius:8px;background:#fff;color:var(--ink);padding:0 8px;font-size:14px}
+.field textarea{height:84px;padding:8px;resize:none;line-height:1.5}
+
+/* 대화창 */
+.talk{position:absolute;left:10px;right:10px;bottom:10px;height:130px;z-index:5;padding:17px 15px 12px;border:1px solid #d9a85fcc;border-radius:12px;
+  background:linear-gradient(180deg,#fffaf0f5,#fbf0dcf5);box-shadow:0 8px 24px #7a4b1a33;cursor:pointer}
+.talk .name{position:absolute;top:-11px;left:12px;height:22px;padding:0 11px;border-radius:11px;display:grid;place-items:center;line-height:1;
+  background:var(--ochre);color:#fff;font:700 12px/1 var(--serif)}
+.talk .name.me{background:var(--parch);color:var(--ink);border:1px solid var(--gold)}
+.type-rest{visibility:hidden}   /* 아직 안 찍힌 글자: 자리만 차지(줄바꿈 위치가 처음부터 고정) */
+.talk .line{margin:0;font:400 15px/1.6 var(--serif);letter-spacing:-.01em;word-break:keep-all;overflow-wrap:anywhere;white-space:pre-line;color:var(--ink)}
+.talk .status{position:absolute;left:15px;bottom:7px;font:400 10.5px/1 var(--serif);color:#9a7a55}
+.talk .next{position:absolute;right:13px;bottom:8px;color:var(--ochre);font-size:12px;animation:nextbob 1.4s ease-in-out infinite}
+@keyframes nextbob{50%{transform:translateY(3px);opacity:.6}}
+
+/* 풀이: 웹툰(흰 바탕, 질문부터 보여 주고 자동 스크롤 안 함 — 공통 기준 4장) */
+.webtoon{position:absolute;inset:0;z-index:15;overflow-y:auto;overscroll-behavior:contain;padding:0 0 30px;background:#fff;scrollbar-width:none}
+.webtoon::-webkit-scrollbar{display:none}
+.wt-top{position:sticky;top:0;z-index:2;height:44px;display:flex;align-items:center;justify-content:center;background:#fff;font:400 12px/1 var(--serif);color:#8a5a22;border-bottom:1px solid #f1e4cf}
+.wt-title{text-align:center;padding:18px 22px 8px}
+.wt-qno{font-size:12px;color:var(--vermilion);letter-spacing:.06em}
+.wt-title h2{margin:8px 0 0;font:700 21px/1.4 var(--serif);color:var(--ink);word-break:keep-all;text-wrap:balance}
+.wt-title h2::after{content:"";display:block;width:64px;height:2px;margin:12px auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.wt-head{margin:8px 14px 16px;padding:12px 14px;background:#7a4b1a;color:#fff8ea;border-radius:4px;border:1px solid var(--gold)}
+.wt-head span,.wt-key span{font-size:11.5px;letter-spacing:.06em;color:var(--apricot)}
+.wt-head p{margin:4px 0 0;font:700 17px/1.5 var(--serif);word-break:keep-all}
+.wt-basis{margin:0 14px 18px;font:400 12.5px/1.6 var(--serif);color:var(--ink-soft);text-align:center}
+.wt-say{display:flex;align-items:flex-start;gap:10px;margin:0 14px 18px}
+.wt-face{width:46px;height:46px;flex:none;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff3cf,#f0c27a);box-shadow:0 0 0 2px var(--gold);display:grid;place-items:center;font:700 15px/1 var(--serif);color:#7a4b1a}
+.wt-bubble{flex:1;min-width:0;margin:2px 0 0;background:var(--cream);color:var(--ink);border:1px solid #d9b98a;border-radius:18px;padding:11px 15px;font:400 16px/1.55 'Myoeunttobak','Gowun Batang',serif;word-break:keep-all;box-shadow:0 6px 18px #7a4b1a22}
+.wt-sec{margin:0 18px 18px}
+.wt-sec h3{margin:0 0 8px;font:700 15.5px/1.4 var(--serif);color:#8a5a22}
+.wt-sec p{margin:0 0 10px;font:400 14.5px/1.85 var(--serif);color:var(--ink);word-break:keep-all}
+.wt-key{margin:6px 14px 18px;padding:12px 14px;background:var(--parch);color:var(--ink);border-radius:4px;border:1px solid var(--gold)}
+.wt-key span{color:var(--vermilion)}.wt-key p{margin:4px 0 0;font:700 15px/1.55 var(--serif);word-break:keep-all}
+.wt-typing{display:inline-flex;gap:3px;margin:0 18px 18px}
+.wt-typing i{width:5px;height:5px;border-radius:50%;background:var(--ochre);animation:blink 1.2s infinite}.wt-typing i:nth-child(2){animation-delay:.2s}.wt-typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{opacity:.25}}
+.wt-end{margin:8px 14px 0}
+.wt-btn{width:100%;min-height:50px;border:1px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,var(--candle),#e9a46a);color:#3a2210;font:700 16px/1 var(--serif);cursor:pointer;box-shadow:0 6px 16px #7a4b1a33}
+.wt-btn:disabled{opacity:.5;cursor:wait}
+.wt-err{margin:0 18px 18px;color:var(--vermilion);font-size:13px}
+
+/* 총정리 보고서: 양피지 문서(크림 종이 칸, 잉크 글씨, 서명) — 공통 기준 4장 */
+.webtoon.rp-mode{background:#ead9b4 radial-gradient(ellipse at 50% 0,#f3e6c8 0,#ead9b4 60%,#dfc79a 100%)}
+.rp-title{text-align:center;padding:16px 22px 10px}
+.rp-title h2{margin:0;font:700 21px/1.4 var(--serif);color:#3b2a1a}
+.rp-title p{margin:8px 0 0;font:400 13px/1.6 var(--serif);color:#6b5340}
+.rp-box{margin:0 14px 14px;background:#fffaf0;color:#2f2418;border:1px solid #c9a46a;border-radius:3px;box-shadow:0 2px 8px #7a4a1c22;padding:14px}
+.rp-box h3{margin:0 0 8px;font:700 14px/1.3 var(--serif);color:#8a4a2a}
+.rp-box p{margin:0;font:400 14px/1.75 var(--serif);word-break:keep-all}
+.rp-row{padding:8px 0;border-bottom:1px dashed #d8c19c;font:400 14px/1.7 var(--serif);word-break:keep-all}.rp-row:last-child{border:0;padding-bottom:0}.rp-row:first-of-type{padding-top:0}
+.rp-row b{display:block;font:700 13px/1.4 var(--serif);color:#6b4326;margin-bottom:2px}
+.rp-list{margin:0;padding-left:18px;font:400 14px/1.75 var(--serif)}
+.rp-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 14px}
+@media print{body{overflow:visible}.viewport,.fit,.frame{position:static;transform:none!important;width:auto;height:auto;box-shadow:none}.frame>*:not(.webtoon){display:none!important}.webtoon{position:static;overflow:visible;background:#fff!important}.rp-actions,.wt-top{display:none}}
+.webtoon.rp-mode .wt-top{background:#efe0bf;border-color:#d8c19c}
+
+/* 네 기둥 세우기: 누를 기둥이 빛나고, 누르면 글자가 붓으로 써지듯 위에서 아래로 번진다 */
+.paper.chart{position:relative;overflow:hidden}
+.paper.chart .ilgan{position:absolute;inset:0;z-index:0;background:var(--ilgan) center 35%/cover no-repeat;opacity:.22;animation:rise 1.2s ease-out}
+.paper.chart>*:not(.ilgan){position:relative;z-index:1}
+button.pillar{all:unset;display:block;cursor:pointer;text-align:center}
+button.pillar:disabled{cursor:default}
+.pillar .gz{min-height:96px}
+.pillar:not(.open) .gz{border-style:dashed;background:#fffaf0aa}
+.pillar .gz b.ink{opacity:0}
+@keyframes brush{0%{opacity:1;clip-path:inset(0 0 100% 0);filter:blur(2px)}70%{filter:blur(.4px)}100%{opacity:1;clip-path:inset(0);filter:none}}
+/* 오행 색: 목 초록 · 화 주홍 · 토 황토 · 금 회백 · 수 먹청 */
+.el-wood{color:#4f7f45!important}.el-fire{color:#c4553f!important}.el-earth{color:#a8782a!important}.el-metal{color:#7d7a74!important}.el-water{color:#2f4a6b!important}
+.elements span{font-weight:700}.elements span b{color:inherit}
+
+/* 한 해 일기예보 */
+.forecast{margin:4px 14px 18px;padding:12px 10px 10px;background:#fffaf0;border:1px solid #e3cfa8;border-radius:10px}
+.rp-box .forecast{margin:0 0 10px;padding:8px 4px;border:0;background:none}
+.forecast h4{margin:0 0 8px;text-align:center;font:700 13px/1.3 var(--serif);color:#8a5a22}
+.fc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px 4px}
+.fc-cell{display:grid;justify-items:center;gap:1px;padding:4px 0;border-radius:8px}
+.fc-cell svg{width:26px;height:26px}
+.fc-cell b{font:700 11.5px/1.2 var(--serif);color:var(--ink)}
+.fc-cell span{font:400 10.5px/1.2 var(--sans);color:var(--ink-soft)}
+.fc-sun{background:#fff1d0}.fc-wind{background:#eaf1f5}.fc-rest{background:#f3ebdf}.fc-cloud{background:#f6f2ec}
+
+/* 보고서 표지: 나의 그림(일간) — 그림이 없으면 보이지 않는다 */
+.rp-cover{height:0;margin:0 14px;border-radius:6px;background:var(--ilgan) center 40%/cover no-repeat}
+.rp-cover.has{height:200px;margin-top:14px;border:1px solid #c9a46a;box-shadow:0 2px 8px #7a4a1c22}
+
+/* 웹툰 칸: 장면 그림 위에 혜화 말풍선(그림 위쪽은 말풍선 자리로 비워 그렸다) */
+.wt-panel{position:relative;margin:0 0 18px;aspect-ratio:3/2;overflow:hidden;background:#f6ead6;animation:rise .5s ease-out}
+.wt-panel img{width:100%;height:100%;object-fit:cover;display:block}
+.wt-pb{position:absolute;left:12px;right:auto;top:10px;max-width:78%;margin:0;padding:9px 14px;background:#fffdf7f2;color:var(--ink);border:1.5px solid #3a2a1c;border-radius:18px;
+  font:400 15.5px/1.5 'Myoeunttobak','Gowun Batang',serif;word-break:keep-all;box-shadow:0 4px 12px #3a2a1c33}
+.wt-pb::after{content:"";position:absolute;left:28px;bottom:-9px;width:14px;height:14px;background:#fffdf7;border-right:1.5px solid #3a2a1c;border-bottom:1.5px solid #3a2a1c;transform:rotate(45deg)}
+/* 미연시 배경이 그림일 때: 아래쪽을 살짝 어둡게 해 대화창이 잘 읽히게 */
+.frame{background:linear-gradient(180deg,#0000 55%,#3a2a1c33 100%),var(--room, none) center 30%/cover no-repeat,radial-gradient(ellipse at 70% 8%,#fff6dc 0,#f8e6c4 38%,#efd2a4 70%,#e3bd86 100%)}
+.frame .sun{display:var(--sun-display,block)}
+.brand{padding:3px 10px;border-radius:12px;background:#fffaf0d9;box-shadow:0 2px 8px #7a4b1a22}
+.progress:not([hidden]){padding:3px 10px;border-radius:12px;background:#fffaf0d9}
+/* 말풍선은 그림 아래쪽(책상)에 걸쳐 두고 꼬리를 위로 — 장면마다 혜화 얼굴이 위·가운데라 얼굴을 가리지 않게 */
+.wt-panel{aspect-ratio:auto;overflow:visible;background:none;margin-bottom:22px}
+.wt-panel img{aspect-ratio:3/2;height:auto}
+.wt-pb{position:relative;left:auto;top:auto;max-width:none;margin:-34px 16px 0;display:block}
+.wt-pb::after{left:50%;top:-8px;bottom:auto;margin-left:-7px;transform:rotate(225deg)}
+
+/* 첫 만남 오프닝 */
+/* 건너뛰기·소리 끄기: 월화 타로와 같은 자리·모양(오른쪽 위, 짙은 반투명 + 금선). 오프닝 동안 건너뛰기가 맨 오른쪽, 소리 버튼은 그 왼쪽 */
+.intro-skip{position:absolute;right:8px;top:5px;z-index:2;height:28px;padding:0 12px;border:1px solid #d9a85f88;border-radius:12px;background:#1e1510b3;color:#f1dcb0;font:12px var(--sans);cursor:pointer}
+.top{padding-right:46px}
+.sound-btn{position:absolute;right:8px;top:5px;z-index:40;width:28px;height:28px;padding:4px;border:1px solid #d9a85f66;border-radius:50%;background:#1e1510b3;color:#f1dcb0;cursor:pointer;line-height:0}
+.sound-btn svg{width:100%;height:100%}
+.sound-btn path:not(:first-child){fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.sound-btn .x{display:none}
+.sound-btn.off{color:#a8957c}
+.sound-btn.off .w1,.sound-btn.off .w2{display:none}
+.sound-btn.off .x{display:inline}
+.frame.intro-run .sound-btn{right:88px}
+.frame:has(.webtoon:not([hidden])) .sound-btn{top:8px;background:#fffdf7e6;color:#5a3a2a;border-color:#c9a46a99}   /* 흰 웹툰 머리줄 위에서는 밝게 */
+@media print{.sound-btn{display:none}}
+/* 표정이 바뀔 때 부드럽게 */
+.frame{transition:background-image .25s ease}
+
+/* 첫 화면 배경 그림(있을 때) */
+.gate.has-bg{background:linear-gradient(180deg,#fff8e633 0%,#fff8e600 40%,#3a2a1c22 100%),url(assets/gate.webp) center/cover no-repeat}
+.gate.has-bg h1{text-shadow:0 2px 12px #fff8e6,0 0 2px #fff}
+.gate.has-bg .gate-sub{text-shadow:0 1px 8px #fff8e6}
+/* 보고서 첫머리 장면(혜화가 두루마리를 건넴) */
+.rp-scene{display:block;width:calc(100% - 28px);margin:0 14px 14px;aspect-ratio:3/2;object-fit:cover;border:1px solid #c9a46a;border-radius:3px;box-shadow:0 2px 8px #7a4a1c22}
+
+/* 유화 서명(2026-10-24 haru가 만든 '유화 도장', 스텔라 꼬리 감긴 금빛 글씨): 왼쪽부터 써지듯 드러나고 살짝 빛남(월화·혜화와 같은 연출) */
+.rp-sign{display:grid;place-items:center;margin:0 0 16px;text-align:center}
+.rp-sign > img{width:min(260px,72%);height:auto;-webkit-mask-image:linear-gradient(90deg,#000 42%,transparent 58%);mask-image:linear-gradient(90deg,#000 42%,transparent 58%);
+  -webkit-mask-size:240% 100%;mask-size:240% 100%;-webkit-mask-position:100% 0;mask-position:100% 0}
+.rp-sign.in > img{animation:signwrite 2.2s .35s cubic-bezier(.45,.1,.4,1) forwards,signglow 1.6s 2.6s ease-out}
+@keyframes signwrite{to{-webkit-mask-position:0 0;mask-position:0 0}}
+@keyframes signglow{40%{filter:drop-shadow(0 0 10px #ffd27a99)}}
+@media print{.rp-sign > img{-webkit-mask-image:none;mask-image:none}}
+.rp-sign{display:flex;align-items:flex-end;justify-content:center;gap:4px}   /* 서명과 꼬마 스티커(유화·스텔라 만세)를 나란히 — 겹치면 서명 끝 획을 가린다(월화 2026-10-24) */
+.rp-sign > img{width:min(220px,60%)}
+.rp-sign .stk.duo{position:relative;flex:none;width:92px;height:92px;margin-bottom:-4px}
+
+/* ── 모션 ── */
+.fx{position:absolute;left:0;top:0;z-index:4;pointer-events:none}
+.webtoon .fx{display:none}
+.spark{position:absolute;z-index:40;width:6px;height:6px;border-radius:50%;pointer-events:none;background:radial-gradient(circle,#fffbe8 0,#ffd98a 45%,#ffd98a00 70%)}
+/* 대화 화면 배경 두 겹: 표정이 바뀔 때 겹쳐서 서서히 */
+.vn-layer{position:absolute;inset:0;z-index:0;background:center 30%/cover no-repeat;opacity:0;transition:opacity .3s ease-out}   /* 월화와 같게 0.3초(2026-10-23, 전 0.25) */
+.vn-layer.on{opacity:1}
+.frame{--room:none}
+/* 웹툰·보고서 칸이 화면에 들어올 때 떠오름 */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .55s ease-out,transform .65s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+/* 진행 표시: 해 여덟 개(지난 질문은 채운 해, 지금 질문은 빛나는 해) */
+.wt-suns{display:flex;justify-content:center;gap:7px;margin-bottom:10px}
+.wt-suns i{width:11px;height:11px;border-radius:50%;border:1.5px solid #e2c896;background:#fffaf0}
+.wt-suns i.d{background:#f2c56b;border-color:#e0a744}
+.wt-suns i.n{background:#f0b46a;border-color:#d9963f;box-shadow:0 0 8px #f0b46a99;animation:sunnow 1.8s ease-in-out infinite}
+@keyframes sunnow{50%{transform:scale(1.18);filter:brightness(1.15)}}
+/* 장면 전환 시간 */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
+/* 버튼 누를 때 살짝 눌림, 기본 버튼에 햇빛 반사 */
+.choice,.wt-btn{transition:transform .1s ease,box-shadow .2s}
+.choice:active,.wt-btn:active{transform:scale(.97)}
+@media (prefers-reduced-motion: reduce){.vn-layer{transition:none}.rv{opacity:1;transform:none}}
+.frame{background:radial-gradient(ellipse at 70% 8%,#fff6dc 0,#f8e6c4 38%,#efd2a4 70%,#e3bd86 100%)}
+.vn-layer::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0000 55%,#3a2a1c33 100%)}
+.frame .sun{z-index:2;opacity:.55}   /* 해 빛: 깜박임 없이 고정, 표정 그림 층(z 0~1) 위에 늘 같은 밝기(그림이 바뀔 때 가려졌다 보였다 하지 않게) — 2026-10-11 haru */
+
+/* ── 명식 공개 의식 ── */
+/* 만세력 찾기: 육십갑자 글자 줄 네 개가 서로 다른 빠르기로 흘러가고, 가운데 띠에서만 또렷하다 */
+.almanac{display:grid;place-items:center;height:250px}
+.alm-sheet{position:relative;padding:12px 18px 14px;border-radius:12px;background:var(--ui-panel,var(--cream));border:1px solid var(--ui-line-strong,var(--gold));box-shadow:var(--ui-shadow,0 8px 24px #7a4b1a26);animation:almin .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes almin{from{opacity:0;transform:translateY(12px)}}
+.alm-sheet small{display:block;text-align:center;font:600 11px/1 var(--serif);letter-spacing:.4em;color:var(--ui-text-soft,var(--ink-soft));margin-bottom:8px}
+.alm-cols{position:relative;display:flex;gap:16px;height:150px;overflow:hidden;-webkit-mask-image:linear-gradient(#0000,#000 30%,#000 70%,#0000);mask-image:linear-gradient(#0000,#000 30%,#000 70%,#0000)}
+.alm-cols::after{content:"";position:absolute;left:-6px;right:-6px;top:calc(50% - 17px);height:34px;border-block:1px solid #c98a3c88;background:#c98a3c14;pointer-events:none}
+.alm-col div{display:grid;animation:almroll calc(9s / var(--n)) linear infinite}
+.alm-col b{display:block;height:34px;line-height:34px;writing-mode:horizontal-tb;font:500 19px var(--serif);letter-spacing:.06em;color:var(--ui-text,#5b3a1c);opacity:.85}
+@keyframes almroll{to{transform:translateY(-50%)}}
+@media (prefers-reduced-motion: reduce){.alm-col div{animation:none}}
+.field .need{border-color:#e08a6a!important;box-shadow:0 0 0 3px #e08a6a33!important}
+/* 글자가 새겨진 기둥 */
+.pillar.open .gz{border-style:solid;background:#fdf1dc}
+.pillar.day.open .gz{background:#fbe2b8}
+.pillar .gz b{display:block}
+.pillar .gz b.dim{color:#c9b59a}
+/* 나의 그림은 일주가 새겨질 때 번져 나온다 */
+.paper.chart .ilgan{animation:ilganin 1.6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes ilganin{from{opacity:0;filter:blur(6px);transform:scale(1.06)}to{opacity:.22}}
+/* 오행 막대 */
+.elements{display:grid;justify-content:stretch;gap:5px;margin:12px 10px 0}
+/* 오행 이름은 제 색 동그라미 안에 흰 글씨, 숫자는 종이 글자색으로 크게(짙은 종이에서도 잘 보이게 — 2026-10-18 haru) */
+.el-row{display:grid;grid-template-columns:24px 1fr 30px;align-items:center;gap:10px;font:700 14px/1 var(--serif)}
+.el-row span{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:currentColor}
+.el-row span::before{content:attr(data-n);color:#fff;font:700 13px/1 var(--serif)}
+.el-row em{display:block;height:10px;border-radius:5px;background:color-mix(in srgb,currentColor 22%,transparent);overflow:hidden}
+.el-row u{display:block;height:100%;width:0;border-radius:5px;background:currentColor}
+.el-row b{text-align:right;font:700 15px/1 var(--sans);font-variant-numeric:tabular-nums;color:var(--ui-text,#3a2c22)}
+.el-row b::after{content:"개";margin-left:1px;font-size:11px;font-weight:400;opacity:.8}
+.el-row.zero span,.el-row.zero b{opacity:.45}
+::view-transition-old(root),::view-transition-new(root){animation-timing-function:cubic-bezier(.4,0,.2,1)}
+.pillar.pre{opacity:0}
+
+/* ── 오프닝(연출 대본 1장) ── */
+.intro{position:absolute;inset:0;z-index:28;overflow:hidden;background:#f3e2c2}
+.intro img.shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;will-change:transform,opacity}
+.intro img.shot.on{opacity:1}
+/* 둥근 창 둘레에만 번지는 햇빛(화면 전체를 밝히지 않는다) */
+.intro-light{position:absolute;left:56%;top:24%;width:78%;aspect-ratio:1;translate:-50% -50%;border-radius:50%;opacity:0;pointer-events:none;mix-blend-mode:soft-light;
+  background:radial-gradient(circle,#fff3cf 0,#ffe2a0cc 22%,#ffd08a55 45%,#ffd08a00 70%)}
+.intro-skip{opacity:0;pointer-events:none;transition:opacity .3s}
+.blackout{position:absolute;inset:0;z-index:35;background:#000;opacity:0;pointer-events:none}   /* 서 있는 혜화 다음 암전: 오프닝 그림·햇살 먼지(z29)·건너뛰기(z31)까지 덮고, 소리 버튼(z40)만 위에 */
+.frame.intro-run .intro-skip{opacity:1;pointer-events:auto}
+/* 시작 화면: 골목 그림은 오프닝 막에 있고, 제목·버튼만 그 위에 */
+.gate.over-intro{background:linear-gradient(180deg,#fff8e655 0%,#fff8e600 38%,#3a2a1c00 70%,#3a2a1c33 100%)}
+.gate.over-intro h1{text-shadow:0 2px 12px #fff8e6,0 0 2px #fff}
+.gate.over-intro .gate-sub{text-shadow:0 1px 8px #fff8e6}
+.gate>*{transition:opacity .45s cubic-bezier(.23,1,.32,1),transform .45s cubic-bezier(.23,1,.32,1)}
+.gate.out{pointer-events:none;background:none;transition:background .45s}
+.gate.out>*{opacity:0;transform:translateY(-10px)}
+.gate button:active{transform:scale(.97)}
+/* 오프닝 동안 햇살 먼지는 오프닝 그림 위로, 첫 인사 대화창도 그 위로(아래에서 올라옴) */
+.frame.intro-run .fx{z-index:29}
+.frame.intro-run .intro-skip{z-index:31}
+.frame.intro-talk .talk{z-index:30;animation:talkup .35s cubic-bezier(.23,1,.32,1) both}
+@keyframes talkup{from{opacity:0;transform:translateY(24px)}}
+@media (prefers-reduced-motion: reduce){.gate>*{transition:opacity .3s}.frame.intro-talk .talk{animation:none}}
+/* 오프닝 조절판(?tune=1, 8777 전용) */
+.tune{position:fixed;right:12px;top:12px;bottom:12px;z-index:100;width:290px;overflow-y:auto;padding:12px 14px;background:#fffaf0f2;border:1px solid #d9a85f;border-radius:12px;font:13px/1.4 var(--sans,system-ui);color:#4a3220;box-shadow:0 8px 30px #0003}
+.tune h2{margin:0 0 8px;font-size:15px}
+.tune fieldset{margin:0 0 8px;padding:6px 8px;border:1px solid #ecd3a8;border-radius:8px}
+.tune legend{font-weight:700;padding:0 4px}
+.tune label{display:block;margin:4px 0}
+.tune label span{display:flex;align-items:center;gap:6px}
+.tune input{flex:1}
+.tune output{width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.tune-btns{display:flex;gap:8px}.tune-btns button{flex:1;height:34px;border:1px solid #d9a85f;border-radius:17px;background:#f0b46a;color:#fff;font-weight:700;cursor:pointer}
+#tune-msg{margin:8px 0 0;font-size:12px;color:#8a5a22}
+
+/* ── UI 다듬기(2026-10-11 haru: "너무 쨍하고 촌스러움") ──
+   색을 토큰으로 묶고 시안 3개를 같은 화면에서 비교한다: ?ui=a(기본) · ?ui=b · ?ui=c.
+   원칙(월화와 같은 결): 패널은 배경과 같은 톤으로 반쯤 비치게, 선은 가는 금선 한 줄, 기본 버튼만 한 단계 진하게. 그라데이션·형광 주황 없음 */
+:root{
+  --ui-panel:#fffaf2d9; --ui-panel-solid:#fffaf2; --ui-blur:8px; --ui-line:#9a7a5544; --ui-line-strong:#9a7a5577;
+  --ui-text:#3a2c22; --ui-text-soft:#7a6656; --ui-shadow:0 6px 20px #4a32200f;
+  --ui-go:#5e4836; --ui-go-text:#fbf3e4; --ui-go-line:#5e4836;
+  --ui-tag:#fffaf2; --ui-tag-text:#5e4836; --ui-tag-line:#9a7a5566;
+  --ui-head:#f7efe2; --ui-head-text:#3a2c22; --ui-head-mark:#a8834f; --ui-accent:#a8834f;
+}
+:root[data-ui="b"]{   /* 월화처럼: 반투명 짙은 찻빛 패널 + 흰 글씨 + 금선 */
+  --ui-panel:#2e2219c4; --ui-panel-solid:#2e2219; --ui-line:#e0bd8655; --ui-line-strong:#e0bd8699;
+  --ui-text:#fbf3e4; --ui-text-soft:#e3d3bd; --ui-shadow:0 6px 20px #00000026;
+  --ui-go:#f3e3c6; --ui-go-text:#3a2a1c; --ui-go-line:#e0bd86;
+  --ui-tag:#2e2219; --ui-tag-text:#f0d9ae; --ui-tag-line:#e0bd8677;
+}
+:root[data-ui="c"]{   /* 한지 + 먹빛 주홍 포인트(인주 색) */
+  --ui-panel:#fdf9f1e6; --ui-line:#b9997055; --ui-line-strong:#b9997088;
+  --ui-go:#9c4a37; --ui-go-text:#fff6ea; --ui-go-line:#9c4a37;
+  --ui-tag:#9c4a37; --ui-tag-text:#fff6ea; --ui-tag-line:#9c4a37;
+  --ui-head-mark:#9c4a37; --ui-accent:#9c4a37;
+}
+/* 대화창 */
+.talk{background:var(--ui-panel);border:1px solid var(--ui-line-strong);box-shadow:var(--ui-shadow);-webkit-backdrop-filter:blur(var(--ui-blur));backdrop-filter:blur(var(--ui-blur))}
+.talk .line{color:var(--ui-text)}
+.talk .name{background:var(--ui-tag);color:var(--ui-tag-text);border:1px solid var(--ui-tag-line);font-weight:700}
+.talk .name.me{background:var(--ui-panel-solid);color:var(--ui-text-soft);border-color:var(--ui-line-strong)}
+.talk .next{color:var(--ui-accent)}.talk .status{color:var(--ui-text-soft)}
+/* 선택지 */
+.choice{background:var(--ui-panel);color:var(--ui-text);border:1px solid var(--ui-line-strong);box-shadow:var(--ui-shadow);-webkit-backdrop-filter:blur(var(--ui-blur));backdrop-filter:blur(var(--ui-blur))}
+@media (hover:hover) and (pointer:fine){.choice:hover{background:var(--ui-panel-solid);border-color:var(--ui-accent)}}
+.choice.go{background:var(--ui-go);color:var(--ui-go-text);border:1px solid var(--ui-go-line);font-weight:700}
+.field{background:var(--ui-panel);border:1px solid var(--ui-line-strong);-webkit-backdrop-filter:blur(var(--ui-blur));backdrop-filter:blur(var(--ui-blur))}
+.field select,.field input,.field textarea{background:#fffdf8;color:#3a2c22;border:1px solid var(--ui-line-strong)}
+/* 무대 종이(명식·질문 목록) */
+.paper{background:var(--ui-panel);border:1px solid var(--ui-line-strong);box-shadow:var(--ui-shadow);-webkit-backdrop-filter:blur(var(--ui-blur));backdrop-filter:blur(var(--ui-blur));color:var(--ui-text)}
+.paper h3{color:var(--ui-text-soft)}.qlist{color:var(--ui-text)}
+:root[data-ui="b"] .pillar .gz{background:#fdf6ea}
+/* 첫 화면·머리줄 */
+.gate button{background:var(--ui-panel);color:var(--ui-text);border:1px solid var(--ui-line-strong);box-shadow:var(--ui-shadow);-webkit-backdrop-filter:blur(var(--ui-blur));backdrop-filter:blur(var(--ui-blur))}
+/* 웹툰·보고서 버튼과 강조 칸 */
+.wt-btn{background:var(--ui-go);color:var(--ui-go-text);border:1px solid var(--ui-go-line);box-shadow:none}
+.wt-head{background:var(--ui-head);color:var(--ui-head-text);border:0;border-left:3px solid var(--ui-head-mark);border-radius:2px}
+.wt-head span{color:var(--ui-head-mark)}
+.wt-key{background:var(--ui-head);border:0;border-left:3px solid var(--ui-head-mark);border-radius:2px}
+.wt-key span{color:var(--ui-head-mark)}
+.wt-qno{color:var(--ui-accent)}
+.wt-suns i.d{background:var(--ui-accent);border-color:var(--ui-accent)}
+.wt-suns i.n{background:var(--ui-go);border-color:var(--ui-go)}
+/* 첫 화면 제목·버튼 자리: 월화와 같이 아래 가운데(place-content end, 아래 14%) — 2026-10-11 haru */
+.gate{place-content:end center;padding-bottom:6%;gap:8px}   /* 14%면 제목이 담비가 빼꼼한 대문을 가려서 대문 아래 돌길로 */
+/* 첫 화면(월화 8767 분석, 2026-10-11): 누르기 전엔 아래로 갈수록 어둡게 덮어 글씨가 잘 보이게, 제목은 밝은 글씨+그림자,
+   버튼은 짙은 반투명+금선+옅은 금빛 고리. 누르면 덮개째 0.5초에 사라져 오프닝 첫 그림이 밝게 드러난다(낮이라 검정 대신 짙은 찻빛) */
+.gate.over-intro{background:linear-gradient(180deg,#2a1b1033 0%,#2a1b1055 45%,#2a1b10aa 100%);transition:opacity .5s ease}
+.gate.over-intro h1{color:#fbeed3;letter-spacing:.06em;text-shadow:0 2px 18px #1a0f08cc,0 0 30px #f0c27a55}
+.gate.over-intro .gate-sub{color:#f1dfbf;text-shadow:0 1px 10px #1a0f08cc}
+.gate.over-intro button{background:#2a1c13cc;color:#fbeed3;border:1px solid #d9a85f;letter-spacing:.08em;padding:0 34px;box-shadow:0 0 0 4px #d9a85f22,0 8px 24px #0008;-webkit-backdrop-filter:none;backdrop-filter:none}
+.gate.over-intro.out{opacity:0;background:linear-gradient(180deg,#2a1b1033 0%,#2a1b1055 45%,#2a1b10aa 100%)}
+.gate.over-intro.out>*{opacity:1;transform:none}
+
+/* ── B 확정 후 월화 규칙 맞추기(docs/UI 분석 - 월화 대비.md 3~8) ── */
+/* 장식 라벨: 가는 선 사이 작은 글씨 "—— 결론 ——" */
+.lbl{display:flex;align-items:center;justify-content:center;gap:10px;font:700 12px/1 var(--serif);letter-spacing:.18em;text-align:center}
+.lbl::before,.lbl::after{content:"";flex:0 1 38px;height:1px;background:currentColor;opacity:.55}
+/* 웹툰 제목 아래 점 장식 */
+.wt-title h2::after{content:"• • • • •";width:auto;height:auto;margin:10px auto 0;background:none;font-size:9px;letter-spacing:.35em;color:var(--gold)}
+.wt-qno{letter-spacing:.08em}
+/* 결론: 짙은 찻빛 + 금선 + 장식 라벨 + 굵은 밝은 글씨(가운데) / 핵심: 크림 + 이중 금선 */
+.wt-head{margin:8px 14px 18px;padding:14px 16px 16px;background:#2e2219;color:#fbf3e4;border:1px solid #d9a85f;border-radius:10px;box-shadow:inset 0 0 0 3px #2e2219,inset 0 0 0 4px #d9a85f55,0 8px 20px #2e221933;text-align:center}
+.wt-head .lbl{color:#e8c98f;margin-bottom:8px}
+.wt-head p{margin:0;font:700 17px/1.55 var(--serif);text-wrap:balance}
+.wt-key{margin:6px 14px 18px;padding:14px 16px;background:#fffaf0;border:1px solid #d9a85f;border-radius:10px;box-shadow:inset 0 0 0 3px #fffaf0,inset 0 0 0 4px #d9a85f66;text-align:center}
+.wt-key .lbl{color:#a8834f;margin-bottom:8px}
+.wt-key p{margin:0}
+/* 선택지 높이(월화 34px) */
+.choice{min-height:34px}
+/* 보고서 */
+.rp-hello{display:flex;align-items:flex-start;gap:10px;margin:4px 14px 18px}
+.rp-face{flex:none;width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:50% 40%;background:#fffaf0;box-shadow:0 0 0 2px #fffaf0,0 0 0 3px #c9a46a,0 4px 12px #3a201433}   /* 월화 fox-head처럼 얼굴만 잘라 둔 그림(yuhwa-head, vn-smile에서 자름) */
+.rp-bub{flex:1;min-width:0;margin:0;padding:12px 15px;background:#fffaf0;border:1px solid #d8c19c;border-radius:16px;font:400 14.5px/1.75 var(--serif);color:#2f2418;word-break:keep-all;box-shadow:0 4px 12px #7a4a1c1a}
+.rp-box{border-radius:8px;padding:16px 16px 14px;box-shadow:0 2px 10px #7a4a1c1a}
+.rp-box h3.lbl{margin:0 0 12px;color:#8a5a2a;font-size:12px}
+.rp-table{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;margin:0;font:400 14px/1.65 var(--serif);color:#2f2418}
+.rp-table dt{font-weight:700;color:#8a4a2a;white-space:nowrap}
+.rp-table dd{margin:0;word-break:keep-all;min-width:0}
+.rp-time{list-style:none;margin:12px 0 0;padding:0 0 0 14px;border-left:1px solid #d8c19c;display:grid;gap:10px}
+.rp-time li{position:relative;font:400 14px/1.6 var(--serif);word-break:keep-all}
+.rp-time li::before{content:"";position:absolute;left:-19px;top:6px;width:9px;height:9px;border-radius:50%;background:#fffaf0;border:2px solid #c9a46a}
+.rp-time b{display:block;font-weight:700;color:#8a4a2a}
+.rp-check{list-style:none;margin:0;padding:0;display:grid;gap:8px;font:400 14px/1.6 var(--serif)}
+.rp-check li{position:relative;padding-left:26px;word-break:keep-all}
+.rp-check li::before{content:"";position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:50%;border:1.5px solid #c9a46a}
+.rp-acc{border-top:1px solid #e6d5b5;padding:10px 0}.rp-acc:first-of-type{border-top:0;padding-top:0}
+.rp-acc summary{display:flex;align-items:flex-start;gap:8px;list-style:none;cursor:pointer;font:700 14px/1.5 var(--serif);color:#2f2418}
+.rp-acc summary::-webkit-details-marker{display:none}
+.rp-acc summary span{flex:1;min-width:0;word-break:keep-all}
+.rp-acc summary em{flex:none;font:400 11px/1 var(--serif);font-style:normal;color:#8a5a2a;border:1px solid #d8c19c;border-radius:10px;padding:4px 8px}
+.rp-acc[open] summary em{color:#fffaf0;background:#8a5a2a;border-color:#8a5a2a}
+.rp-acc p{margin:8px 0 0;font:400 13.5px/1.75 var(--serif);word-break:keep-all}
+.rp-acc .rp-acc-head{font-weight:700;color:#8a4a2a}
+.rp-actions{grid-template-columns:1fr 1fr;gap:8px}
+.rp-actions #rp-pdf{grid-column:1/-1}   /* 색·모양은 아래 큰 버튼(.wt-btn) 공통 */
+.rp-ghost{min-height:44px;border:1px solid #b08a5a;border-radius:22px;background:transparent;color:#5e4836;font:700 14px/1 var(--serif);cursor:pointer}
+.rp-ghost:active{transform:scale(.97)}
+@media print{.rp-acc{display:block}.rp-acc p{display:block}}
+/* 웹툰·보고서는 흰/양피지 바탕이라 B의 밝은 버튼 색 대신 짙은 찻빛 고정 */
+.wt-btn{background:#3b2a1d;color:#fbf3e4;border:0;border-radius:25px}
+.wt-suns i.d{background:#c9a46a;border-color:#c9a46a}
+.wt-suns i.n{background:#8a5a2a;border-color:#8a5a2a}
+
+/* 상품 고르기(월화 주제 고르기처럼 2칸 그리드 + 선 아이콘, 준비 중은 점선·흐리게, 무료 명식 확인은 아래 가로 한 줄) */
+.choices.products{grid-template-columns:1fr 1fr;gap:6px}
+.prod{display:grid;justify-items:center;align-content:center;gap:3px;min-height:68px;padding:8px 6px;border:1px solid var(--ui-line-strong);border-radius:10px;background:var(--ui-panel);color:var(--ui-text);cursor:pointer;
+  box-shadow:var(--ui-shadow);-webkit-backdrop-filter:blur(var(--ui-blur));backdrop-filter:blur(var(--ui-blur));transition:transform .16s cubic-bezier(.23,1,.32,1),border-color .2s}
+.prod svg{width:22px;height:22px;fill:none;stroke:#e0bd86;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.prod b{font:700 14px/1.2 var(--serif)}
+.prod small{font:400 11px/1.2 var(--sans);color:var(--ui-text-soft)}
+.prod:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){.prod:hover{border-color:#e0bd86}}
+.prod.lock{border-style:dashed;opacity:.72}
+.prod.lock svg{stroke:var(--ui-text-soft)}
+.prod.wide{grid-column:1/-1;grid-template-columns:auto auto 1fr;justify-items:start;align-items:center;column-gap:10px;min-height:44px;padding:8px 14px}
+.prod.wide small{justify-self:end}
+.paper .pillar small{color:var(--ui-text-soft)}   /* 짙은 종이 위 기둥 이름 잘 보이게 */
+
+/* 오늘의 운세: 무대 안에서 한 장만 스크롤하며 칸을 차례로 펼친다. */
+.paper.daily{position:relative;max-height:calc(var(--frame-h,640px) - 200px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--ui-line-strong) transparent}
+.daily-date{margin:0 0 12px;text-align:center;font-size:12px;color:var(--ui-text-soft)}
+.daily-pillar{width:76px;margin:0 auto 12px;text-align:center}
+.daily-section{margin-top:14px;padding-top:12px;border-top:1px solid var(--ui-line)}
+.daily-section h4{margin:0 0 6px;font:700 14px/1.5 var(--serif);color:var(--ui-text-soft)}
+.daily-section p{margin:0;font:400 13.5px/1.85 var(--serif);color:var(--ui-text);white-space:pre-line;overflow-wrap:anywhere}
+.daily-section[data-daily="color"] p{display:flex;align-items:center;gap:9px}
+.daily-swatch{display:inline-block;flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--ui-line-strong)}
+@media (prefers-reduced-motion:reduce){.paper.daily{animation:none}}
+/* 첫 화면 제목·버튼 묶음을 화면 아래 3분의 1 지점(위에서 2/3 높이)에 — 2026-10-11 haru. 위·아래 빈 곳을 2:1로 나눔 */
+.gate{place-content:stretch;align-content:stretch;grid-template-rows:2.28fr auto auto 1fr;padding:0;gap:14px}
+.gate h1{grid-row:2;align-self:end}
+.gate button{grid-row:3;align-self:start;justify-self:center}
+/* 월화와 맞춤(2026-10-11 haru): 왼쪽 위 '혜화 사주'는 타원 없이 글자만(그림자로 읽히게), 입력칸은 짙은 반투명 + 금선 + 밝은 글씨 */
+.brand{padding:0;border-radius:0;background:none;box-shadow:none;color:#fbeed3;text-shadow:0 1px 6px #1a0f08cc,0 0 2px #1a0f0899}
+.field{background:transparent;border:0;padding:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+.field select,.field input,.field textarea{background:#1e1510e6;color:#f6ead6;border:1px solid #c9a46a99;border-radius:12px;box-shadow:inset 0 1px 6px #0009;font-family:var(--serif)}
+.field input#f-name{height:44px;text-align:center;font-size:16px}
+.field select{color-scheme:dark}
+.field select option{background:#2a1d15;color:#f6ead6}
+.field input::placeholder,.field textarea::placeholder{color:#c9b08a99}
+.field select:focus,.field input:focus,.field textarea:focus{outline:none;border-color:#e9c27f;box-shadow:inset 0 1px 6px #0009,0 0 0 3px #e9c27f26}
+.field label,.field span,.field small{color:var(--ui-text-soft)}
+
+/* ── 유화 별자리(2026-10-22): 혜화 style.css를 복사하고 아래에서 황혼 남색·별빛 레몬으로 덮는다(공통 기준 4장: 그림체·금선·종이는 같게) ── */
+:root[data-ui="b"]{
+  --ui-panel:#141a3cc9; --ui-panel-solid:#141a3c; --ui-line:#f3dc8a55; --ui-line-strong:#f3dc8a99;
+  --ui-text:#f4f1ff; --ui-text-soft:#c9cbe8; --ui-shadow:0 6px 20px #0000003a;
+  --ui-go:#f6e7a8; --ui-go-text:#1d2350; --ui-go-line:#f3dc8a;
+  --ui-tag:#141a3c; --ui-tag-text:#f6e7a8; --ui-tag-line:#f3dc8a77;
+  --ui-head-mark:#e8c766; --ui-accent:#e8c766; --ui-head:#1d2350; --ui-head-text:#f4f1ff;
+}
+.paper{background:#141a3ceb}
+.frame{background:linear-gradient(180deg,#0000 55%,#0b0f2a55 100%),var(--room, none) center 30%/cover no-repeat,linear-gradient(180deg,#1d2558 0,#3a3f7a 45%,#e59a7a 85%,#f3c08e 100%)}
+.frame .sun{display:none}
+.gate{background:radial-gradient(ellipse at 50% 30%,#2b3470 0,#151b45 60%,#0b0f2a 100%)}
+.gate h1{color:#f6e7a8}
+.paper.birth{text-align:center}.paper.birth p{margin:.3em 0 0;font-size:14px;color:var(--ui-text-soft)}
+.paper.chart-astro ul{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 14px}
+.paper.chart-astro li{display:flex;justify-content:space-between;font-size:13px;border-bottom:1px dotted var(--ui-line);padding:3px 0}
+.paper.chart-astro li b{font-weight:400;color:var(--ui-text-soft)}
+.paper.chart-astro .dim{font-size:12px;color:var(--ui-text-soft);margin:8px 0 0;text-align:center}
+.city-list{max-height:132px;overflow:auto;display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.city{text-align:left;padding:7px 10px;border-radius:8px;border:1px solid var(--ui-line-strong);background:#fffdf8;color:#2a2038;font:inherit;font-size:14px}
+.city.on{border-color:#c79a3a;background:#f6e7a8}
+.city-none{font-size:13px;color:var(--ui-text-soft);margin:4px 2px}
+.field select[hidden]{display:none}
+/* 차트 원판 */
+.wheel{display:block;width:100%;max-width:270px;margin:0 auto}
+.wh-ring{fill:none;stroke:#f3dc8a88;stroke-width:1}.wh-ring.in{stroke:#f3dc8a44}
+.wh-tick{stroke:#f3dc8a55;stroke-width:.8}
+.wh-sign{fill:#c9cbe8;font:9px var(--sans);text-anchor:middle;dominant-baseline:middle}
+.wh-body circle{fill:#ffe27a}.wh-body text{fill:#f4f1ff;font:9px var(--sans)}   /* 가운데 맞춤은 글자마다 text-anchor 속성으로(이름표 자리 고르기) */
+.wh-body.dim{opacity:.5}.wh-body.pre,.wh-axis.pre{opacity:0}
+.wh-axis{stroke:#ffa3bd99;stroke-width:1;stroke-dasharray:3 3}
+.wh-sum{text-align:center;font-size:13px;margin:6px 0 0;color:var(--ui-text)}
+/* 별 잇기 */
+.sky{position:absolute;inset:0;z-index:20;background:linear-gradient(180deg,#1b2a5e66,#0a113099),var(--sky-bg,url(assets/sky-night-1.webp)) center/cover no-repeat;overflow:hidden}   /* --sky-bg: 시간대 밤하늘(app.js skyBg) */
+.sk-svg{position:absolute;inset:0;width:100%;height:100%}
+.sk-dust{fill:#e9edff}
+.sk-edge{stroke:#ffeaa8;stroke-width:1.4;stroke-linecap:round;opacity:.1}
+.sk-edge.dot{stroke-width:1;stroke-dasharray:3 4}
+.sk-edge.on{opacity:.85}
+.sk-edge.on.fresh:not(.dot){stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:skdraw 1.1s ease-out forwards}
+@keyframes skdraw{to{stroke-dashoffset:0}}
+.sk-small{fill:#e9edff;opacity:.45}.sk-small.on{opacity:.95}
+.sk-q{cursor:pointer}.sk-q.locked{cursor:default}
+.sk-halo{fill:#ffe27a;opacity:.14}.sk-core{fill:#ffe27a;opacity:.95}
+.sk-q.concern .sk-halo,.sk-q.concern .sk-core{fill:#ffa3bd}
+.sk-q.done .sk-halo{opacity:.22}.sk-q.done .sk-core{opacity:1}
+.sk-q.locked .sk-halo{opacity:.05}.sk-q.locked .sk-core{opacity:.55}
+.sk-halo.next{animation:sktw 1.4s ease-in-out infinite}
+@keyframes sktw{0%,100%{opacity:.12}50%{opacity:.5}}
+.sk-label{fill:#c9cbe8;font:10px var(--sans);text-anchor:middle}
+.sk-hud{position:absolute;left:16px;right:16px;top:38px;display:flex;justify-content:space-between;color:#c9cbe8;font-size:12px}
+.sk-hud b{color:#f6e7a8;font:700 16px var(--serif)}
+.sk-say{white-space:pre-line;position:absolute;left:14px;right:14px;bottom:calc(24px + var(--shift,0px));background:#0a1130d9;border:1px solid #2a3a78;border-radius:12px;padding:12px 14px;color:#f4f1ff;font:15px/1.55 "Myoeunttobak",var(--sans)}
+.sk-say .who{display:block;color:#ffe27a;font:700 12px var(--sans);margin-bottom:2px}
+.sk-end{position:absolute;left:14px;right:14px;bottom:calc(120px + var(--shift,0px))}
+.sk-end .wt-btn{width:100%}
+@media (prefers-reduced-motion:reduce){.sk-halo.next{animation:none}.sk-edge.on.fresh:not(.dot){animation:none;stroke-dashoffset:0}}
+
+/* 핵심 구절 형광펜(공통 기준 7장) */
+mark.hl{background:linear-gradient(transparent 55%,#ffe27a99 55%);color:inherit;padding:0 1px}
+
+/* 오늘의 별자리 운세 카드 */
+.frame.daily-talk .talk{z-index:25}
+/* 운세 별 넷(2026-10-23): 다 열면 한 장에 모아 보기 — 대화창 위로 들어가게 위쪽부터 */
+
+/* ── 월화와 큰 틀 맞추기(2026-10-23 haru: 「전체적인 큰UI틀을 하나의 서비스처럼」, 유화 색·그림·시그니처는 그대로) ──
+   위치·크기·모양은 월화 style.css 값(세 가게를 360×640으로 재서 비교), 색만 유화(황혼 남색·별빛 레몬) */
+/* 첫 화면: 제목·들어가기는 아래 가운데(아래 14%), 버튼 폭은 글자 + 양옆 34px */
+.gate{place-content:end center;align-content:end;grid-template-rows:none;justify-items:center;gap:18px;padding:0 0 14%}
+.gate h1{grid-row:auto;align-self:auto;zoom:var(--tx-fix,1);font:700 34px/1.2 var(--serif);letter-spacing:.06em;text-shadow:0 2px 18px #000c,0 0 30px #f3dc8a55}
+.gate button,.gate.over-intro button{grid-row:auto;align-self:auto;zoom:var(--tx-fix,1);min-width:0;height:calc(46px / var(--tx-fix,1));padding:0 calc(34px / var(--tx-fix,1)) .19em calc(34px / var(--tx-fix,1) + .16em);border-radius:calc(23px / var(--tx-fix,1));font:600 16px var(--serif);letter-spacing:.08em;background:#141a3ccc;color:#f6e7a8;border:1px solid #f3dc8a;box-shadow:0 0 0 4px #f3dc8a22,0 8px 24px #000a}
+/* 소리 버튼은 오른쪽 위에 늘(오프닝 포함), 건너뛰기는 그 왼쪽 */
+.sound-btn{right:8px;top:5px}
+.frame.intro-run .sound-btn{right:8px}
+.intro-skip{right:calc(44px / var(--tx-fix,1));top:calc(5px / var(--tx-fix,1));zoom:var(--tx-fix,1);white-space:nowrap;height:calc(28px / var(--tx-fix,1));padding:0 calc(12px / var(--tx-fix,1)) calc(2px / var(--tx-fix,1));display:inline-grid;place-items:center;line-height:1}
+.sound-btn{background:#0c1226b3;color:#f6e7a8;border-color:#f3dc8a66}.sound-btn.off{color:#9a9cc0}
+/* 대화창: 거의 불투명, 이름표는 알약 모양 */
+.talk{background:#121838ee}
+.talk .name{zoom:var(--tz-talk,1);top:0;translate:0 -50%;left:calc(12px / var(--tz-talk,1));height:1.85em;padding:0 .9em 1px;border-radius:999px;font:700 12px/1 var(--serif);letter-spacing:.08em;background:linear-gradient(135deg,#1d2350,#2b3470);color:#f6e7a8;border:1px solid #f3dc8a;box-shadow:0 2px 8px #0008}
+.talk{padding-top:max(17px,calc(11.1px * var(--text-k-talk,1) + 5px))}
+/* 선택지: 모서리 12, 짙은 바탕 + 금선, 핵심 선택지는 짙은 남색 + 레몬 글씨(월화의 짙은 자주 + 금빛 글씨 자리) */
+.choice{border-radius:12px;padding:5px 12px 7px;background:linear-gradient(180deg,#1b2350f2,#0f1530f2);color:#f4f1ff;border:1px solid #f3dc8a8c;-webkit-backdrop-filter:none;backdrop-filter:none}
+.choices{gap:5px}
+.choices.three-col .choice{padding:5px 4px 7px}
+.choice.go{background:linear-gradient(135deg,#1d2350,#34407e 52%,#1d2350);color:#f6e7a8;border:1px solid #f3dc8a;font:700 14.5px/1.3 var(--serif);letter-spacing:.02em;box-shadow:0 0 0 3px #f3dc8a1f,0 6px 16px #000a}
+@media (hover:hover){.choice:not(.go):not(:disabled):hover{background:linear-gradient(180deg,#252e62f2,#151c40f2);border-color:#f3dc8a}.choice.go:not(:disabled):hover{filter:brightness(1.12)}}
+.field input#f-name{padding:0 14px}
+.field select,.field input,.field textarea{background:#0c1226e6;color:#f4f1ff;border-color:#f3dc8a99}
+.field input::placeholder,.field textarea::placeholder{color:#c9cbe899}
+.field select:focus,.field input:focus,.field textarea:focus{border-color:#f3dc8a;box-shadow:inset 0 1px 6px #0009,0 0 0 3px #f3dc8a26}
+/* 폰 '글자 크게' 최대치(월화 2026-10-20과 같음, 값은 lines.js가 넣음): 대화 화면 1.3배·읽는 화면 1.5배까지, 화면 틀(진행도·가게 이름·건너뛰기)은 원래 크기 */
+.talk .line,.choices>*{zoom:var(--tz-talk,1)}
+.webtoon{zoom:var(--tz-read,1)}
+.brand,.top .progress{zoom:var(--tx-fix,1)}
+
+/* 큰 버튼(별 지도로 돌아가기 · 보고서 받기 · 운세 닫기 등) 월화 .wt-btn과 같은 모양(2026-10-23 haru: 버튼 색이 화면마다 다름): 알약 54px + 지나가는 빛.
+   색은 유화 남색·레몬(고르기의 완료 버튼과 같은 색). 흰 종이 위에서는 월화처럼 흰 고리, 밤하늘 위에서는 옅은 금빛 고리 */
+.wt-btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:54px;padding:0 20px 2px;border:1px solid #f3dc8a;border-radius:999px;
+  background:linear-gradient(135deg,#1d2350,#34407e 52%,#1d2350);color:#f6e7a8;font:700 16px/1 var(--serif);letter-spacing:.03em;cursor:pointer;
+  box-shadow:0 0 0 4px #fff,0 0 0 5px #f3dc8a66,0 12px 26px #1d235050;transition:transform .2s ease,filter .2s ease}
+.wt-btn::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#fff3c44d 50%,transparent 65%) -150% 0/250% 100% no-repeat;animation:btnsheen 3.6s ease-in-out 1s infinite;pointer-events:none}
+@keyframes btnsheen{0%{background-position:-150% 0}45%,100%{background-position:150% 0}}
+@media (hover:hover){.wt-btn:hover{filter:brightness(1.12)}}
+.wt-btn:active{transform:scale(.98)}
+.wt-btn:disabled{cursor:default;filter:brightness(.9)}
+.sk-end .wt-btn,.daily-card .wt-btn{box-shadow:0 0 0 3px #f3dc8a1f,0 6px 16px #000a}
+@media (prefers-reduced-motion:reduce){.wt-btn::after{animation:none}}
+/* 별 잇기 말 상자를 다른 화면 대화창(.talk)과 같은 자리·크기·모양으로(2026-10-23 haru: 화면마다 디테일이 다름): 아래 10px · 높이 130 · 알약 이름표 · 같은 글꼴.
+   보고서 받기 버튼은 그 바로 위 */
+.sk-say{left:10px;right:10px;bottom:10px;height:130px;padding:17px 15px 12px;padding-top:max(17px,calc(11.1px * var(--text-k-talk,1) + 5px));background:#121838ee;border:1px solid var(--ui-line-strong);box-shadow:var(--ui-shadow);
+  color:var(--ui-text);font:400 15px/1.6 var(--serif);letter-spacing:-.01em;word-break:keep-all}
+.sk-say .who{position:absolute;top:0;translate:0 -50%;left:calc(12px / var(--tz-talk,1));zoom:var(--tz-talk,1);display:grid;place-items:center;height:1.85em;margin:0;padding:0 .9em 1px;border-radius:999px;
+  font:700 12px/1 var(--serif);letter-spacing:.08em;background:linear-gradient(135deg,#1d2350,#2b3470);color:#f6e7a8;border:1px solid #f3dc8a;box-shadow:0 2px 8px #0008}
+.sk-end{left:14px;right:14px;bottom:154px}
+.sk-say .line{margin:0;white-space:pre-line;zoom:var(--tz-talk,1)}
+/* 보고서 끝 닫기·처음으로: 월화 보고서 끝 버튼(.rp-end .choice)과 같은 크림 알약 52px */
+.rp-ghost{min-height:52px;border:1px solid #d2ad74;border-radius:999px;background:#fffaf0;color:#5a3d22;font:700 15px/1 var(--serif);box-shadow:0 0 0 3px #fff,0 0 0 4px #e6cc9b88,0 8px 18px #3a201422}
+.rp-actions{gap:12px 10px}
+/* 시험용 전체 복사(출시 전 app.js TEST_COPY = false) */
+.rp-copy{display:block;width:100%;margin-top:12px;min-height:44px;border:1px dashed #b58b55;border-radius:10px;background:#fffaf0;color:#5a3d22;font:700 14px/1 var(--serif);cursor:pointer}
+@media print{.rp-copy{display:none}}
+/* 꼬마 스티커(맛보기): 두 장 번갈아(0.45초씩) + 살짝 통통. 누르는 데는 안 걸린다 */
+.stk{position:absolute;left:0;top:0;width:92px;height:92px;pointer-events:none;z-index:3}
+.stk img{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 3px 6px #0008)}
+/* 두 장이 겹쳐 비치지 않게 한 장이 보일 땐 다른 장은 완전히 숨긴다(2026-10-23 haru: 앞판이 불투명하게 남음) */
+.stk img+img{opacity:0}.stk.ok img{animation:stkflipA .9s steps(1) infinite}.stk.ok img+img{animation-name:stkflip}   /* .ok = 두 장 다 받음(app.js) */
+@keyframes stkflip{50%{opacity:1}}@keyframes stkflipA{50%{opacity:0}}
+.stk.yuhwa{left:auto;right:6px;top:auto;bottom:118px;animation:stkbob 1.8s ease-in-out infinite}
+@keyframes stkbob{50%{translate:0 -3px}}
+.stk.stella{width:68px;height:68px}
+.stk.stella.fly{transition:transform 1.3s cubic-bezier(.3,.7,.3,1)}
+@media (prefers-reduced-motion:reduce){.stk img+img{display:none}.stk,.stk img,.stk.ok img{animation:none}}
+.stk.yuhwa.hi{bottom:196px;width:88px;height:88px}
+.stk.stella.hop{transition:transform .35s ease-out}
+/* 별 스티커: 원래 점(.sk-core)은 자리·반짝임 기준으로만 두고 숨긴다 */
+.sk-svg.art .sk-q .sk-core{opacity:0}
+.sk-art image{animation:stkflipA 1.3s steps(1) infinite}.sk-art image.f2{opacity:0;animation-name:stkflip}
+.sk-q.locked .sk-art{opacity:.45}
+.sk-q.done .sk-art{filter:drop-shadow(0 0 4px #ffe27a)}
+@media (prefers-reduced-motion:reduce){.sk-art image.f2{display:none}.sk-art image{animation:none}}
+.stk.ok[data-n="stella-perch"] img{animation-duration:1.4s}   /* 앉아서 고개 돌리기(3.2초는 너무 느리다 haru → 0.7초마다) */
+/* 반응 컷(react-*, 세로 3:4 가까이 찍은 그림): 얼굴이 잘리지 않게 조금 길게, 위쪽 기준 */
+.wt-panel.react img{aspect-ratio:4/5;object-position:50% 22%}
+.sk-q:focus{outline:none}.sk-q:focus-visible .sk-halo{stroke:#fff;stroke-width:1.5}   /* 별을 누를 때 네모 테두리가 생기지 않게(키보드로 고를 때만 표시) */
+/* 차트 원판 스티커(지평선·가운데·천체) */
+.wh-rise{fill:#ffd9a0;font:8px var(--sans);text-anchor:middle}
+.wh-center{filter:drop-shadow(0 0 6px #ffe27a55)}
+/* 그림 판 위 글자: 금빛·남색 어느 바탕에서도 읽히게 짙은 테두리 */
+.wh-sign{fill:#fff3d6;stroke:#1a1430;stroke-width:2.4px;paint-order:stroke;font-weight:700}
+.wh-body text{stroke:#141029;stroke-width:2.4px;paint-order:stroke}
+.wh-tick{stroke:#f3dc8a66}
+.wh-horizon{stroke:#f3d27a;stroke-width:1.6;stroke-linecap:round;filter:drop-shadow(0 0 2px #ffd98a88)}
+.wh-horizon-end{fill:#f3d27a}
+/* 오프닝 끝 암전(월화처럼): 첫 인사 뒤 그림 위에 검은 막이 천천히 덮였다가 앉은 유화의 방이 밝아지며 나타난다 */
+.intro-black{position:absolute;inset:0;z-index:3;background:#07060f;opacity:0;pointer-events:none}
+/* 결제 뒤 보관 링크 종이(관문 /r/<열쇠>, 혜화와 같은 모양) — 보고서 끝에도 같은 링크(.rp-keep). 유화 종이(남색 밤하늘 종이) 색에 맞춤 */
+.paper.keep{display:grid;gap:8px;text-align:center}
+.paper.keep p{margin:0;font:400 13px/1.5 var(--sans);color:var(--ui-text)}
+.paper.keep a{font:400 12px/1.4 var(--sans);color:#f6d58a;word-break:break-all}
+.rp-keep a{font:400 12px/1.4 var(--sans);color:#8a4a2a;word-break:break-all}
+.keep-copy{justify-self:center;min-height:36px;padding:0 16px;border:1px solid #f3dc8a;border-radius:999px;background:transparent;color:#f6e7a8;font:700 13px var(--sans);cursor:pointer}
+.rp-actions #rp-close:last-child{grid-column:1/-1}   /* 처음으로를 없앤 뒤(2026-10-25): 닫기 | 다음에 또 올게요 한 줄, 메인을 안 거쳐 왔으면 닫기만 한 줄 가득 */
+
+/* 오늘의 운세 창(2026-10-24, 월화·혜화 dpop과 같은 틀·크기): 밤하늘 위에 작은 양피지 창 하나씩, 귀퉁이에 운마다 꼬마 유화. 다 모은 운세는 같은 창 + ✕ */
+.dpop{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:#070b1ecc;animation:fadein .25s ease}
+.dpop.out{opacity:0;transition:opacity .2s}
+.dpop-sheet{position:relative;width:300px;max-height:calc(var(--frame-h,640px) - 40px);display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:12px;animation:dpopin .28s cubic-bezier(.2,.8,.2,1) both}
+@keyframes dpopin{from{transform:translateY(10px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fadein{from{opacity:0}}
+.dpop-kick{margin:0;text-align:center;font:400 12px/1.4 var(--sans);color:#f3dc8a;letter-spacing:.08em}
+.dpop .rp-box{margin:0;min-height:0;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#c9a46a transparent;border:1px solid #d2ad74;border-radius:14px;background:linear-gradient(180deg,#fffaf0,#f6ead2);box-shadow:0 0 0 3px #fffaf0,0 0 0 4px #e6cc9b,0 12px 26px #0008;padding:16px;color:#2f2418}
+.dpop .rp-box h3{margin:0 0 8px;text-align:center;font:700 15px/1.4 var(--serif);color:#6b4a26;letter-spacing:.06em}
+.dpop .rp-box p{margin:0;font:400 14.5px/1.75 var(--serif);word-break:keep-all;white-space:pre-line}
+.dpop .rp-box p.short{text-align:center;font-size:18px;font-weight:700;margin-bottom:6px}
+.dpop .choice{justify-self:center;min-width:140px}
+.dpop .rp-box p.dlove+p.dlove{margin-top:10px}
+.dpop .rp-box p.dlove b{display:block;margin-bottom:2px;font:700 12px/1.4 var(--sans);color:#9a6a2e;letter-spacing:.04em}
+.dcolor{display:block;width:54px;height:54px;margin:2px auto 10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px #fffaf0,0 0 0 4px #d2ad74,inset 0 -6px 12px #0002,0 6px 14px #0003}
+.dsum .dpop-sheet{max-height:min(560px,calc(var(--frame-h,640px) - 40px));grid-template-rows:auto minmax(0,1fr)}
+.dsum-head{display:flex;align-items:center;gap:12px;padding:0 2px 0 4px}
+.dsum-head .dpop-kick{text-align:left}
+.dsum-head h2{margin:2px 0 0;font:700 17px/1.3 var(--serif);color:#f7e6c4}
+.dsign{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:#141a3c;box-shadow:0 0 0 1px #d9b57a,0 4px 10px #0008;flex:none}.dsign img{width:34px;height:34px}
+.dsum-x{margin-left:auto;align-self:center;width:32px;height:32px;flex:none;padding:0;display:grid;place-items:center;border:1px solid #d2ad74;border-radius:50%;background:#fffaf0;color:#5a3d22;box-shadow:0 4px 12px #0007;cursor:pointer}
+.dsum-x svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+.dsum-body{display:grid;gap:10px}
+.dsum-body h3:not(:first-child){margin-top:8px}
+.dpop-sheet > .stk.day{left:auto;right:-14px;top:-30px;width:84px;height:84px;z-index:2}
+.dpop-sheet > .stk.day.sum{top:auto;bottom:-36px;right:-10px}   /* 다 모은 운세: 머리 줄의 ✕를 가리지 않게 아래 귀퉁이로 */
+.dpop .rp-box,.dpop-kick,.dpop .choice,.dsum-head{zoom:var(--tz-read,1)}
+/* 별 잇기: 다음 별 풀이 준비 상태(유화가 별을 읽는 중… → 준비됐어요) */
+.sk-ready{position:absolute;left:0;right:0;top:62px;margin:0;text-align:center;font:400 12px/1.4 var(--sans);color:#c9cbe8;letter-spacing:.02em}
+.sk-ready:not(:empty)::before{content:"";display:inline-block;width:6px;height:6px;margin-right:6px;border-radius:50%;background:#c9cbe8;vertical-align:1px;animation:sktw 1.4s ease-in-out infinite}
+.sk-ready.ok{color:#f6e7a8}.sk-ready.ok::before{background:#f6e7a8;animation:none}
+.sk-q.wait .sk-halo{animation:none;opacity:.08}.sk-q.wait .sk-art{opacity:.55}.sk-q.wait{cursor:progress}   /* 풀이를 아직 쓰는 중인 다음 별 */
+.sk-ready.nudge{animation:sknudge .5s ease}@keyframes sknudge{30%{transform:scale(1.12);color:#fff}}
+/* 기다리는 동안 꼬마 유화: 대화창 위 왼쪽(대화창 높이 130 + 여백) */
+.frame > .stk.wait{left:10px;top:auto;bottom:132px;width:92px;height:92px;z-index:24}
+/* 폰 브라우저는 글자가 16px보다 작은 입력칸을 누르면 화면을 저절로 확대한다 → 입력칸은 모두 16px(2026-10-24, 월화가 찾음) */
+.field select,.field input,.field textarea,#f-c,#f-city{font-size:16px}
+.wt-typing.st-dots{margin:0 0 0 4px;vertical-align:middle}.st-dots i{width:3.5px;height:3.5px;background:currentColor}   /* '유화가 하늘을 읽는 중' 뒤 점 세 개 */
+.frame > .stk.wait{bottom:150px}   /* 이름표(유화)를 가리지 않게 조금 위로 */
+/* 기다림 밤하늘: 별이 하나씩 떠오르고(.on) 이어진 선이 그어진다(.fresh = 별 잇기와 같은 긋기). 다 뜬 별은 천천히 반짝 */
+.sk-small.ws{opacity:0;transition:opacity .9s ease}.sk-small.ws.on{opacity:.95;animation:wstw 3.2s ease-in-out infinite}@keyframes wstw{50%{opacity:.5}}
+.sk-edge.wl{opacity:0}.sk-edge.wl.on{opacity:.55}
+.frame.daily-talk > .stk.wait{z-index:26}
+/* 해·달·별로: 작별 인사 뒤 화면이 까맣게 → 문 닫히는 소리 → 메인(app.js leaveShop, 월화와 같음) */
+.leave-black{position:fixed;inset:0;z-index:9999;background:#000;opacity:0;transition:opacity .7s ease-in;pointer-events:all}   /* 월화와 같음 */
+.leave-black.on{opacity:1}
+/* 메인에서 들어왔을 때 첫 화면이 검은 데서 1.2초에 밝아짐(index.html이 html에 from-main을 붙임, 2026-10-25 haru) */
+html.from-main body::after{content:'';position:fixed;inset:0;z-index:9999;background:#000;pointer-events:none;animation:from-main-in 1.2s ease-out .1s both}
+@keyframes from-main-in{to{opacity:0;visibility:hidden}}

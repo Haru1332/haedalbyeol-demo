@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>월화 타로</title>
+<!--ARTIFACT-START-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
+<link rel="preload" href="assets/fonts/Griun_Myoeunddobak-Rg.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<script>// 포트폴리오 체험판: 메인이 '/'가 아니라 체험판 맨 위(이 가게 폴더의 위)라서, 거기서 왔을 때도 원본처럼 밝아지게
+(() => { try { if ((performance.getEntriesByType('navigation')[0] || {}).type !== 'navigate') return; const r = document.referrer ? new URL(document.referrer) : null;
+  if (r && r.origin === location.origin && r.pathname === location.pathname.replace(/[^/]+\/$/, '')) document.documentElement.classList.add('arrive'); } catch {} })();</script>
+<script>
+// 메인('해·달·별')에서 들어왔을 때만 첫 화면이 검은 데서 서서히 밝아진다(2026-10-25 haru 「메인에서 각 가게로 들어갈떄도 갑자기 팍! 들어가거든」, 메인이 0.8초 암전 뒤 이동).
+// 메인에서 왔는지: 주소의 home=(이 PC·폰 링크), 배포 뒤엔 같은 도메인 메인('/')에서 온 링크. 새로 고침·뒤로 가기는 그대로
+(() => { try {
+  if ((performance.getEntriesByType('navigation')[0] || {}).type !== 'navigate') return;
+  const r = document.referrer ? new URL(document.referrer) : null;
+  if (new URLSearchParams(location.search).has('home') || (r && r.origin === location.origin && r.pathname === '/' && location.pathname !== '/')) document.documentElement.classList.add('arrive');
+} catch {} })();
+</script>
+</head>
+<body>
+<div class="viewport">
+  <div class="fit" id="fit">
+    <main class="frame" id="frame" aria-label="월화의 타로 살롱">
+      <div class="vn-layers" aria-hidden="true"><i></i><i></i></div>
+      <div class="stars"></div>
+      <div class="glows" aria-hidden="true"><i class="g-moon"></i><i class="g-ball"></i><i class="g-card"></i><i class="g-tail"></i></div>
+      <div class="top"><span class="brand">월화 타로</span><span class="progress" id="progress" hidden></span><button id="log-btn" type="button" hidden>풀이 다시 보기</button></div>
+      <div class="fox" id="fox"><img id="fox-img" src="assets/fox-card.png" alt="월화와 여우 루나"></div>
+      <span class="bubble" id="bubble" hidden></span>
+      <div class="table" id="table"><div class="cards" id="cards"></div><p class="hint" id="table-hint" hidden></p></div>
+      <article class="answer" id="answer" hidden></article>
+      <div class="zoom" id="zoom" hidden><p class="chapter" id="chapter"></p><div class="zoom-body" id="zoom-body"></div></div>
+      <div class="tray" id="tray" hidden></div>
+      <div class="showcase" id="showcase" hidden></div>
+      <div class="spread" id="spread" hidden></div>
+      <div class="gate" id="gate" hidden><h1>월화 타로</h1><button type="button" id="gate-go">들어가기</button></div>
+      <div class="intro" id="intro" aria-hidden="true"><img alt=""><img alt=""><img alt=""><div class="intro-glow"><b class="intro-light"></b><i class="intro-rays"></i><i class="intro-door"></i><canvas class="intro-dust"></canvas></div><b class="intro-black"></b><button class="intro-skip" id="intro-skip" type="button">건너뛰기</button></div>
+      <div class="choices" id="choices" hidden></div>
+      <div class="talk" id="talk" role="button" tabindex="0" aria-label="다음 대사">
+        <span class="name" id="name">월화</span>
+        <p class="line" id="line"></p>
+        <span class="next" id="next" hidden>▼</span>
+        <span class="status" id="status" hidden>월화가 카드를 읽는 중<i class="wt-typing"><i></i><i></i><i></i></i></span>
+        <span class="sr" id="live" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></span>
+      </div>
+      <section class="webtoon" id="webtoon" hidden></section>
+      <section class="sheet" id="sheet" hidden></section>
+    </main>
+  </div>
+</div>
+<script>window.DEMO_CASES = ['tarot-hyehwa', 'tarot-yuhwa']; window.DEMO_SHOP = 'tarot';</script>
+<script src="../demo-api.js"></script>
+<script src="asset-list.js"></script>
+<script src="scripts-data.js"></script>
+<script src="lines.js"></script>
+<script src="sfx-data.js"></script>
+<script src="sound.js"></script>
+<script src="app.js"></script>
+<script src="motion.js"></script>
+<script src="bubbles.js"></script>
+<script src="reading-format.js"></script>
+<script src="cutin.js"></script>
+<script src="ai-reading.js"></script>
+<script src="../demo-ui.js"></script>
+<script src="demo-shop.js"></script>
+<!--ARTIFACT-END-->
+</body>
+</html>

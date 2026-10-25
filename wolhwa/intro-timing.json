@@ -1,0 +1,12 @@
+{
+ "lightAt": 240,
+ "spreadMs": 1200,
+ "fadeMs": 2500,
+ "appearMs": 1600,
+ "peak": 0.25,
+ "glowPeak": 0.25,
+ "glowFadeMs": 2500,
+ "core": "#d09867",
+ "edge": "#e8aa61",
+ "coreW": 3
+}
